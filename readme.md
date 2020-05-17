@@ -48,7 +48,6 @@ In case pip3 install fails `sudo pip3 install --upgrade setuptools` helped me
 ## SUNSPEC
 Tested on ABB device PVS 100 and TRIO 50, documentation into doc/ABB directory and example into sunspec_device.py file, also working on SMA inverter_manager
 ## SMA
-documentation into doc/SMA
 ### Inverter manager, inverters and janitza (energy meter) attached to it
 respectivly
   * /sma/inverter_manager.py
@@ -58,4 +57,10 @@ respectivly
 respectivly
   * /sma/cluster_controller.py
   * /sma/cluster_controller_inverter.py
+## Schneider PM 5500 series (tested on 5560)
+  * /sma/schneider_pm5500.py
+
+## Legrand comunication module 145671 which is for meter model 14668
+  * /sma/legrand_145671.py
+
 
