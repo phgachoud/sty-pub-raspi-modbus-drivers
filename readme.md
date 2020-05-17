@@ -45,6 +45,7 @@ In case pip3 install fails `sudo pip3 install --upgrade setuptools` helped me
 	
 
 # Devices and drivers
+You'll find samples into the sample directory
 ## SUNSPEC
 Tested on ABB device PVS 100 and TRIO 50, documentation into doc/ABB directory and example into sunspec_device.py file, also working on SMA inverter_manager
 ## SMA
