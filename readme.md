@@ -43,3 +43,19 @@ This project is under GPLv2
 
 In case pip3 install fails `sudo pip3 install --upgrade setuptools` helped me
 	
+
+# Devices and drivers
+## SUNSPEC
+Tested on ABB device PVS 100 and TRIO 50, documentation into doc/ABB directory and example into sunspec_device.py file, also working on SMA inverter_manager
+## SMA
+documentation into doc/SMA
+### Inverter manager, inverters and janitza (energy meter) attached to it
+respectivly
+  * /sma/inverter_manager.py
+  * /sma/sunny_tripower_60.py 
+  * /sma/janitza_UMG604.py
+### Cluster controller and inverters (sma energy meter) attached to it
+respectivly
+  * /sma/cluster_controller.py
+  * /sma/cluster_controller_inverter.py
+
