@@ -1,0 +1,6 @@
+[submodule "lib/third_party/pysunspec"]
+	path = lib/third_party/pysunspec
+	url = git@github.com:sunspec/pysunspec.git
+[submodule "lib/third_party/SunriseSunsetCalculator"]
+	path = lib/third_party/SunriseSunsetCalculator
+	url = git@github.com:jebeaudet/SunriseSunsetCalculator.git
