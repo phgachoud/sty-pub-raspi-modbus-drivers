@@ -1,0 +1,29 @@
+https://www.youtube.com/watch?v=T76RZC41XaE
+
+#***** Example in C
+https://info.kmtronic.com/raspberry-pi-modbus-energy-meter-1.html
+#***** Python
+#** SDM 630
+https://www.hackster.io/samuelphy/energy-meter-logger-6a3468
+https://github.com/samuelphy/energy-meter-logger/blob/master/read_energy_meter.py -> collect_and_store
+#** Pi Modbus 
+http://riptideio.github.io/pymodbus/
+https://pymodbus.readthedocs.io/en/latest/index.html
+#Better written
+https://github.com/lucab85/PowerMeter-Reader/blob/master/SchneiderElectric_iEM3255.py
+#Simple example
+https://raspberrypi.stackexchange.com/questions/66995/reading-registers-through-pymodbus
+
+#******** SCHNEIDER 
+BIG ENDIAN #https://www.se.com/se/en/faqs/FA275749/
+# Clients
+qmodmaster is starting with reference number 0 as start Address while
+	Generic Modbus/Jbus Tester is taking 1 as starting register but sending as reference number 0
+simplymodbus
+	http://www.simplymodbus.ca/RTUslave.htm
+#working
+	~/tmp/modpoll/linux_arm-eabihf/modpoll -c 2 -r 3028  -m tcp 172.16.10.139
+		from https://www.modbusdriver.com/downloads/modpoll.tgz
+	echo "$((2#101010101))" #BINARY to INT
+	echo "100001101011000110111000100011"| od -f #BINARY to FLOAT32
+	echo "$((16#0bd4))" # HEX to INT

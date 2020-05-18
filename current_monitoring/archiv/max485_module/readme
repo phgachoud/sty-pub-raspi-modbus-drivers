@@ -1,0 +1,22 @@
+#*********** LINKS ***********
+https://techsparx.com/energy-system/modbus/max485-ttl-to-rs485-adapters.html
+https://www.microcontroller-project.com/rs485-communication-between-arduino-mega-and-arduino-pro-mini.html
+
+#***** MAX485 CHIP ****
+Application notes (www.maximintegrated.com) https://www.maximintegrated.com/en/app-notes/index.mvp/id/367
+Home page (www.maximintegrated.com) https://www.maximintegrated.com/en/products/interface/transceivers/MAX485.html/tb_tab0
+Data sheet (datasheets.maximintegrated.com) https://datasheets.maximintegrated.com/en/ds/MAX1487-MAX491.pdf
+# PINOUT
+# 	https://www.microcontroller-project.com/rs485-communication-between-arduino-mega-and-arduino-pro-mini.html
+# RS485		PI
+# --------------------
+# DI		TX
+# DE		GPIO 26 (37)
+# RE		GPIO 26 (37)
+# RO		RX (10 UART0 RX)
+#
+#
+# VCC		5V
+# Gnd		Gnd
+#
+

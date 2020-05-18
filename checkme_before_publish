@@ -1,0 +1,22 @@
+modifs to check
+
+'../lib' -> 'lib'
+'../lib/register_types' -> 'lib/register_types'
+
+documentation on functions (--help)
+See if all have GPLv2
+
+argparser description
+
+SitConstants
+
+
+    sys.path.append(os.path.join(os.path.dirname(__file__), '../lib'))
+    from sit_constants import SitConstants
+
+     = argparse.ArgumentParser(description=self.PARSER_DESCRIPTION)
+     PARSER_DESCRIPTION = 'Actions with sunspec device. ' + SitConstants.DEFAULT_HELP_LICENSE_NOTICE
+     
+     
+     
+     

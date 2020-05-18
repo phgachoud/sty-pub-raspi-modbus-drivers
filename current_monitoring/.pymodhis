@@ -1,0 +1,15 @@
+
+# 2018-11-09 11:17:28.905196
++help
+
+# 2018-11-09 11:19:10.422294
++client read_holding_registers address=0 count=3 unit=1
+
+# 2018-11-09 11:20:12.104649
++client read_holding_registers address=0 count=2 
+
+# 2018-11-09 11:20:52.356641
++client read_holding_registers address=0 count=2 unit=2
+
+# 2018-11-09 11:22:04.711041
++client.read_holding_registers(1,1)
