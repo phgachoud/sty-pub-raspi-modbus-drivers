@@ -37,7 +37,7 @@ as tested on a raspberry pi 3B+ with raspbian 9 and 10, linux commands are put h
 
 # License
 
-This project is under GPLv2
+This project is under [LGPLv2.1](https://www.gnu.org/licenses/old-licenses/lgpl-2.1.en.html), see LICENCE file
 
 # Tips and tricks:
 
