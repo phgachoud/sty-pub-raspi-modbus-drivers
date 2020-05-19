@@ -1,9 +1,11 @@
+CURRENTLY NOT TESTED WAIT FOR SOME DAYS TO BE READY
+
 # Summary of project
 Solarity is an enterprise involved in Photovoltaic systems. The IT department works on various projects basically to get informations from PV associated devices, show its status and do required jobs to maintain the plants. The technologies used are mostly debian linux, eiffel, python, postgresql and angular.
 
 As responsible for IT department I'd like to share the maximum of code I can so that I contribute to this big concept of knowledge sharing through humanity.
 
-I recomend for ethical purpose to **[use sourceforge repository](https://sourceforge.net/projects/sty-pub-raspi-modbus-drivers/)** more than [github](https://github.com/phgachoud/sty-pub-raspi-modbus-drivers) since github belongs to microsoft I personnaly don't agree with many ethical choices.
+I recommend for ethical purpose to **[use sourceforge repository](https://sourceforge.net/projects/sty-pub-raspi-modbus-drivers/)** more than [github](https://github.com/phgachoud/sty-pub-raspi-modbus-drivers) since github belongs to microsoft I personnaly don't agree with many ethical choices.
 
 Sorry for inconsistencies and things that need some more time to be as good as I would like to be.
 
