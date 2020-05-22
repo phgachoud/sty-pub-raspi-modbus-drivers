@@ -56,6 +56,7 @@ try:
 	from logging import handlers
 	sys.path.append(os.path.join(os.path.dirname(__file__), '../lib')) #the way to import directories
 	sys.path.append(os.path.join(os.path.dirname(__file__), '../lib/third_party/SunriseSunsetCalculator')) #the way to import directories
+	sys.path.append(os.path.join(os.path.dirname(__file__), '../lib/third_party/pysunspec')) #the way to import directories
 	import argparse
 	import csv
 	import socket
@@ -90,7 +91,7 @@ class SunspecDevice(object):
 
 
 # VARIABLES
-	__logger = None
+	_logger = None
 
 # FUNCTIONS DEFINITION 
 
@@ -106,9 +107,9 @@ class SunspecDevice(object):
 			self.init_arg_parse()
 			#*** Logger
 			fmt = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-			self.__logger = logging.getLogger(__name__) 
-			self.__logger.propagate = False
-			self.__logger.setLevel(logging.DEBUG)
+			self._logger = logging.getLogger(__name__) 
+			self._logger.propagate = False
+			self._logger.setLevel(logging.DEBUG)
 			self.__console_handler = logging.StreamHandler(sys.stdout)
 			self.__console_handler.setFormatter(fmt)
 			self.__console_handler.setLevel(self.DEFAULT_LOGGING_LEVEL)
@@ -117,10 +118,10 @@ class SunspecDevice(object):
 			self.__file_handler.setFormatter(fmt)
 			self.__file_handler.setLevel(self.DEFAULT_FILE_LOGGING_LEVEL)
 
-			self.__logger.addHandler(self.__file_handler)
-			self.__logger.addHandler(self.__console_handler)
+			self._logger.addHandler(self.__file_handler)
+			self._logger.addHandler(self.__console_handler)
 		except OSError as l_e:
-			self.__logger.warning("init-> OSError, probably rollingfileAppender" % (l_e))
+			self._logger.warning("init-> OSError, probably rollingfileAppender" % (l_e))
 			if e.errno != errno.ENOENT:
 				raise
 		except Exception as l_e:
@@ -157,11 +158,11 @@ class SunspecDevice(object):
 		if self.__args.test:
 			self.test()
 		if self.__args.verbose:
-			self.__logger.setLevel(logging.DEBUG)
+			self._logger.setLevel(logging.DEBUG)
 			self.__console_handler.setLevel(logging.DEBUG)
 			self.__file_handler.setLevel(logging.DEBUG)
 		else:
-			self.__logger.setLevel(logging.DEBUG)
+			self._logger.setLevel(logging.DEBUG)
 			self.__console_handler.setLevel(logging.ERROR)
 			self.__file_handler.setLevel(logging.DEBUG)
 			
@@ -178,15 +179,15 @@ class SunspecDevice(object):
 		"""
 		if self.__args.device_type == 'sma':
 			l_result = True
-			self.__logger.info("Device type is SMA, no sunset sunrise check, always true")
+			self._logger.info("Device type is SMA, no sunset sunrise check, always true")
 		else:
 			l_ss = SunriseSunset(datetime.now(), latitude=float(self.__args.lattitude),
 			longitude=float(self.__args.longitude), localOffset=-3)
-			self.__logger.info("device_is_reachable-> longitude:%s lattitude:%s" % (self.__args.longitude, self.__args.lattitude))
+			self._logger.info("device_is_reachable-> longitude:%s lattitude:%s" % (self.__args.longitude, self.__args.lattitude))
 			l_rise_time, l_set_time = l_ss.calculate()
 			l_result = l_rise_time + timedelta(seconds=self.SECONDS_INTERVAL_FOR_SUNRISE_VALIDATION) < datetime.now() and \
 				l_set_time - timedelta(seconds=self.SECONDS_INTERVAL_FOR_SUNSET_VALIDATION) > datetime.now()
-			self.__logger.info("device_is_reachable-> rise_time:%s set_time:%s now:%s result (sun is up?):%s" % (l_rise_time, l_set_time, datetime.now(), l_result))
+			self._logger.info("device_is_reachable-> rise_time:%s set_time:%s now:%s result (sun is up?):%s" % (l_rise_time, l_set_time, datetime.now(), l_result))
 
 		return l_result
 
@@ -203,19 +204,19 @@ class SunspecDevice(object):
 			l_d = self.get_device()
 
 			self.__display_all_properties(l_d)
-			#self.__logger.info("-->device")	
+			#self._logger.info("-->device")	
 			#print d.device
-#			self.__logger.info("-->models")	
+#			self._logger.info("-->models")	
 #			print l_d.models
-#			self.__logger.info("-->common")	
+#			self._logger.info("-->common")	
 #			print l_d.common
-#			self.__logger.info("-->inverter ************* repeating *************")	
+#			self._logger.info("-->inverter ************* repeating *************")	
 #			print (l_d.inverter.repeating)
 			print ("################# BEGIN #################")
-			self.__logger.info("--> ************* device models *************: %s" % (l_d.models))	 #Lists properties to be loaded with l_d.<property>.read() and then access them
-			self.__logger.info("-->inverter ************* l_d.inverter.points *************: %s" % (l_d.inverter.points))	#Gives the inverter available properties
-			self.__logger.info("-->inverter ************* common *************: %s" % (l_d.common))	
-			self.__logger.info("-->inverter ************* common Serial Number *************: %s" % (l_d.common.SN))	
+			self._logger.info("--> ************* device models *************: %s" % (l_d.models))	 #Lists properties to be loaded with l_d.<property>.read() and then access them
+			self._logger.info("-->inverter ************* l_d.inverter.points *************: %s" % (l_d.inverter.points))	#Gives the inverter available properties
+			self._logger.info("-->inverter ************* common *************: %s" % (l_d.common))	
+			self._logger.info("-->inverter ************* common Serial Number *************: %s" % (l_d.common.SN))	
 #			pprint(vars(l_d.common.model.device))
 			#pprint(vars(l_d.common.model.device))
 			#l_serialized = jsonpickle.encode(d)
@@ -223,23 +224,23 @@ class SunspecDevice(object):
 			#pprint(vars(d))
 			print ("################# END #################")
 #			print (l_d.inverter.model)
-#			self.__logger.info("--> repeating_name")	
+#			self._logger.info("--> repeating_name")	
 #			print l_d.volt_var.repeating_name
 			#print("Test function")
 			#print(l_d.inverter)
-#			self.__logger.info("--> voltages DC 3 phases")#Not implemented for model 103
+#			self._logger.info("--> voltages DC 3 phases")#Not implemented for model 103
 #			print l_d.volt_var#Not implemented for model 103
 
 
 
 		except client.SunSpecClientError as l_e:
 			print('Error: %s' % (l_e))
-			self.__logger.error('Error: %s' % (l_e))
+			self._logger.error('Error: %s' % (l_e))
 			sys.exit(1)
 		except Exception as l_e:
-			self.__logger.exception("Exception occured: %s" % (l_e))
+			self._logger.exception("Exception occured: %s" % (l_e))
 			print('Error: %s' % (l_e))
-			self.__logger.error('Error: %s' % (l_e))
+			self._logger.error('Error: %s' % (l_e))
 			sys.exit(1)
 
 	def __display_all_properties (self, a_device):
@@ -289,7 +290,7 @@ class SunspecDevice(object):
 		try:
 			return a_sun_spec_client_device_property
 		except Exception as l_e:
-			self.__logger.error('Error: %s' % (l_e))
+			self._logger.error('Error: %s' % (l_e))
 			raise l_e
 
 	"""
@@ -298,7 +299,7 @@ class SunspecDevice(object):
 	"""
 	def get_csv_file_path(self):
 		#require
-		self.__logger.debug("host ip:%s" % self.__args.host_ip)
+		self._logger.debug("host ip:%s" % self.__args.host_ip)
 		assert self.__args.host_ip, "host ip is empty"
 		assert self.__args.host_mac, "host mac is empty"
 		if __debug__:
@@ -323,7 +324,7 @@ class SunspecDevice(object):
 			if l_e.errno == errno.EEXIST:
 				pass
 			else:
-				self.__logger.error('get_csv_file_path Error: %s' % (l_e))
+				self._logger.error('get_csv_file_path Error: %s' % (l_e))
 				raise
 
 		return l_result
@@ -336,7 +337,7 @@ class SunspecDevice(object):
 		if self.__args.slave_address:
 			l_modbus_slave_address = self.__args.slave_address
 		l_ip_address = self.__args.host_ip
-		self.__logger.info("-->IP:%s MAC:%s Slave_address:%s " % (l_ip_address, self.__args.host_mac, l_modbus_slave_address))
+		self._logger.info("-->IP:%s MAC:%s Slave_address:%s " % (l_ip_address, self.__args.host_mac, l_modbus_slave_address))
 		l_timeout = 2.0 #Default 2.0
 
 		try:
@@ -346,14 +347,14 @@ class SunspecDevice(object):
 
 			return l_device
 		except client.ModbusClientError as l_e:
-			self.__logger.error('ModbusClientError: %s' % (l_e))
+			self._logger.error('ModbusClientError: %s' % (l_e))
 			raise l_e
 		except client.SunSpecClientError as l_e:
-			self.__logger.error('SunspecClientError: %s' % (l_e))
+			self._logger.error('SunspecClientError: %s' % (l_e))
 			raise l_e
 		except Exception as l_e:
-			self.__logger.exception("Exception occured: %s" % (l_e))
-			self.__logger.error('Error: %s' % (l_e))
+			self._logger.exception("Exception occured: %s" % (l_e))
+			self._logger.error('Error: %s' % (l_e))
 			raise l_e
 
 	def get_csv_row(self, a_device):
@@ -384,8 +385,8 @@ class SunspecDevice(object):
 			#DONT HAVE IT l_result.append(a_device.inverter.DCV)
 			l_result.append(a_device.inverter.DCW)
 			l_result.append(a_device.inverter.TmpCab)
-#			self.__logger.debug("get_csv_row: PhVphA:%s" % type(l_device.inverter.PhVphA).__name__)
-#			self.__logger.debug("get_csv_row: PhVphA:%s" % repr(l_device.inverter.PhVphA))
+#			self._logger.debug("get_csv_row: PhVphA:%s" % type(l_device.inverter.PhVphA).__name__)
+#			self._logger.debug("get_csv_row: PhVphA:%s" % repr(l_device.inverter.PhVphA))
 			l_result.append(a_device.inverter.TmpSnk)
 			# DONT HAVE IT l_result.append(l_device.inverter.TmpTrns)
 			l_result.append(a_device.inverter.TmpOt)
@@ -397,20 +398,20 @@ class SunspecDevice(object):
 			l_result.append(a_device.inverter.EvtVnd2)
 			l_result.append(a_device.inverter.EvtVnd3)
 			l_result.append(a_device.inverter.EvtVnd4)
-			#self.__logger.debug("get_csv_row: l_result:%s" % ('|'.join(str(l) for l in map(str, l_result))))
-			self.__logger.info("get_csv_row: %s" % ('|'.join(str(l) for l in map(str, l_result))))
+			#self._logger.debug("get_csv_row: l_result:%s" % ('|'.join(str(l) for l in map(str, l_result))))
+			self._logger.info("get_csv_row: %s" % ('|'.join(str(l) for l in map(str, l_result))))
 			#print(l_device.inverter)
 
 			return l_result
 		except client.ModbusClientError as l_e:
-			self.__logger.error('ModbusClientError: %s' % (l_e))
+			self._logger.error('ModbusClientError: %s' % (l_e))
 			sys.exit(0)
 		except client.SunSpecClientError as l_e:
-			self.__logger.error('SunspecClientError: %s' % (l_e))
+			self._logger.error('SunspecClientError: %s' % (l_e))
 			sys.exit(1)
 		except Exception as l_e:
-			self.__logger.exception("Exception occured: %s" % (l_e))
-			self.__logger.error('Error: %s' % (l_e))
+			self._logger.exception("Exception occured: %s" % (l_e))
+			self._logger.error('Error: %s' % (l_e))
 			sys.exit(1)
 
 	def write_csv_header(self, a_device, a_csv_writter):
@@ -462,14 +463,14 @@ class SunspecDevice(object):
 			#Header row
 			a_csv_writter.writerow(self.CSV_HEADER_ROW)
 		except client.ModbusClientError as l_e:
-			self.__logger.error('ModbusClientError: %s' % (l_e))
+			self._logger.error('ModbusClientError: %s' % (l_e))
 			raise l_e
 		except client.SunSpecClientError as l_e:
-			self.__logger.error('SunspecClientError: %s' % (l_e))
+			self._logger.error('SunspecClientError: %s' % (l_e))
 			raise l_e
 		except Exception as l_e:
-			self.__logger.exception("Exception occured: %s" % (l_e))
-			self.__logger.error('Error: %s' % (l_e))
+			self._logger.exception("Exception occured: %s" % (l_e))
+			self._logger.error('Error: %s' % (l_e))
 			raise l_e
 
 		
@@ -484,17 +485,17 @@ class SunspecDevice(object):
 		try:
 			l_f_name = self.get_csv_file_path()
 			l_file_exists = os.path.isfile(l_f_name)
-			self.__logger.info("Writting into file %s exists:%s" % (l_f_name, l_file_exists))
+			self._logger.info("Writting into file %s exists:%s" % (l_f_name, l_file_exists))
 			with open(l_f_name, mode='a+') as l_csv_file:
 				l_csv_writter = csv.writer(l_csv_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 				if not l_file_exists:
-					self.__logger.info("Writting HEADER row: %s" % (';'.join(str(l) for l in self.CSV_HEADER_ROW)))
+					self._logger.info("Writting HEADER row: %s" % (';'.join(str(l) for l in self.CSV_HEADER_ROW)))
 					self.write_csv_header(a_device, l_csv_writter)
-				self.__logger.info("HEADER row: %s" % (';'.join(str(l) for l in self.CSV_HEADER_ROW)))
-				self.__logger.info("Writting row: %s" % (';'.join(str(l) for l in a_row)))
+				self._logger.info("HEADER row: %s" % (';'.join(str(l) for l in self.CSV_HEADER_ROW)))
+				self._logger.info("Writting row: %s" % (';'.join(str(l) for l in a_row)))
 				l_csv_writter.writerow(a_row)
 		except Exception as l_e:
-			self.__logger.error('Error: %s' % (l_e))
+			self._logger.error('Error: %s' % (l_e))
 			raise l_e
 
 
