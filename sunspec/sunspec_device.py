@@ -55,6 +55,7 @@ try:
 	import logging # http://www.onlamp.com/pub/a/python/2005/06/02/logging.html
 	from logging import handlers
 	sys.path.append(os.path.join(os.path.dirname(__file__), '../lib')) #the way to import directories
+	sys.path.append(os.path.join(os.path.dirname(__file__), '../lib/third_party')) #the way to import directories
 	import argparse
 	import csv
 	import socket
