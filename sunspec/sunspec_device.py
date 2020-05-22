@@ -4,15 +4,14 @@
 #           Wrapper over sunspec to log content into a csv file, more infos with --help
 #
 #			Logging into /var/log/solarity/file_name.log
-#			Find more info about the sunspec and model into wiki, the csv file will be follow the format of sunspec
 #
-#       IMPROVMENTS:
+#       IMPROVEMENTS:
 #			Hope to be able one day to merge it with other more abstract modules such as cluster_controller.py
 #
 #       CALL SAMPLE:
-#               Usage python3 /home/pg/data/solarity/sit-raspi/current_monitoring/sunspec/sunspec_device.py --host_ip '192.168.0.68' --host_mac 'b8:27:eb:e6:bb:3f' --longitude='-70.941830' --lattitude='-33.669959' --store_values --device_type='abb' -v -t --slave_address=126
+#               Usage /data/solarity/sit-raspi/sty-pub-raspi-modbus-drivers/sunspec/sunspec_device.py --host_ip '192.168.0.68' --host_mac 'b8:27:eb:e6:bb:3f' --longitude='-70.941830' --lattitude='-33.669959' --store_values --device_type='abb' -v -t --slave_address=126
 #			A typical call into a cronjob
-#				* 5-23 * * * python3 /home/pg/data/solarity/sit-raspi/current_monitoring/sunspec/sunspec_device.py --host_ip '192.168.0.68' --host_mac 'b8:27:eb:e6:bb:3f' --longitude='-70.941830' --lattitude='-33.669959' --store_values --device_type='abb' -v -t --slave_address=126
+#				* 5-23 * * * /data/solarity/sit-raspi/sty-pub-raspi-modbus-drivers/sunspec/sunspec_device.py --host_ip '192.168.0.68' --host_mac 'b8:27:eb:e6:bb:3f' --longitude='-70.941830' --lattitude='-33.669959' --store_values --device_type='abb' -v -t --slave_address=126
 #		
 #		REQUIRE
 #			sudo apt-get install python3-serial or sudo apt-get install python-serial
@@ -20,16 +19,32 @@
 #			sudo apt install python3-pip
 #			sudo pip3 install serial #in case of error unsupported operand type(s) for -=: 'Retry' and 'int' sudo pip3 install --upgrade setuptools
 #
-#			sudo mkdir /var/log/solarity;sudo chmod 777 /var/log/solarity;sudo mkdir /var/solarity;sudo chmod 777 /var/solarity
-#
 #       CALL PARAMETERS:
 #               1) 
 #
+#		*************************************************************************************************
 #       @author: Philippe Gachoud
 #       @creation: 20190327
 #       @last modification:
 #       @version: 1.0
-#       @URL: $URL
+#		*************************************************************************************************
+#		Copyright (C) 2020 Solarity spa
+
+#		This library is free software; you can redistribute it and/or
+#		modify it under the terms of the GNU Lesser General Public
+#		License as published by the Free Software Foundation; either
+#		version 2.1 of the License, or (at your option) any later version.
+#
+#		This library is distributed in the hope that it will be useful,
+#		but WITHOUT ANY WARRANTY; without even the implied warranty of
+#		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#		Lesser General Public License for more details.
+#
+#		You should have received a copy of the GNU Lesser General Public
+#		License along with this library; if not, write to the Free Software
+#		Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+#		*************************************************************************************************
+#
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 # INCLUDES
@@ -58,7 +73,7 @@ except ImportError as l_err:
 	print("ImportError: {0}".format(l_err))
 	raise l_err
 
-class InverterData(object):
+class SunspecDevice(object):
 
 # CONSTANTS
 	LOG_FILE_PATH = '/var/log/solarity'
@@ -121,6 +136,7 @@ class InverterData(object):
 		self.__parser.add_argument('-v', '--verbose', help='increase output verbosity', action="store_true")
 		self.__parser.add_argument('-s', '--store_values', help='Stores values into csv file located into ' + self.DEFAULT_CSV_FILE_LOCATION, action="store_true")
 		self.__parser.add_argument('-t', '--test', help='Runs test method', action="store_true")
+		self.__parser.add_argument('-y', '--display_all', help='Displays all attributes found for sunspec device', action="store_true")
 		
 		#self.__parser.add_argument('-u', '--base_url', help='NOT_IMPLEMENTED:Gives the base URL for requests actions', nargs='?', default=self.DEFAULT_BASE_URL)
 		l_required_named = self.__parser.add_argument_group('required named arguments')
@@ -173,22 +189,17 @@ class InverterData(object):
 
 		return l_result
 
+	def display_all(self):
+		"""
+		"""
+
 	def test(self):
 		"""
 			Test function
 		"""
-		l_modbus_slave_address = self.DEFAULT_SLAVE_ADDRESS #Default 1
-		if self.__args.slave_address:
-			l_modbus_slave_address = self.__args.slave_address
-		if self.__args.host_ip:
-			l_ip_address = self.__args.host_ip
-		self.__logger.info("TEST METHOD -->IP:%s MAC:%s Slave_address:%s " % (l_ip_address, self.__args.host_mac, l_modbus_slave_address))
-		l_timeout = 2.0 #Default 2.0
 
 		try:
-			l_d = client.SunSpecClientDevice(client.TCP, l_modbus_slave_address, ipaddr=l_ip_address, timeout=l_timeout)
-			l_d.inverter.read() # retreives latest inverter model contents
-			l_d.common.read()
+			l_d = self.get_device()
 
 			self.__display_all_properties(l_d)
 			#self.__logger.info("-->device")	
@@ -329,6 +340,7 @@ class InverterData(object):
 
 		try:
 			l_device = client.SunSpecClientDevice(client.TCP, l_modbus_slave_address, ipaddr=l_ip_address, timeout=l_timeout)
+			l_device.common.read() # retreives latest inverter model contents
 			l_device.inverter.read() # retreives latest inverter model contents
 
 			return l_device
@@ -494,8 +506,8 @@ def main():
 	logger = logging.getLogger(__name__)
 
 	try:
-		l_id = InverterData()
-		l_id.execute_corresponding_args()
+		l_obj = SunspecDevice()
+		l_obj.execute_corresponding_args()
 #		l_id.test()
 		pass
 	except KeyboardInterrupt:
