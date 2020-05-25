@@ -72,6 +72,7 @@ try:
 	from sit_date_time import SitDateTime
 	from sit_json_conf import SitJsonConf
 	from sit_utils import SitUtils
+	from sit_constants import SitConstants
 except ImportError as l_err:
 	print("ImportError: {0}".format(l_err))
 	print(sys.path)
