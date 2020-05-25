@@ -194,7 +194,7 @@ class SunspecDevice(object):
 		"""
 		try:
 			l_d = self.get_device()
-			self._logger.device('display_all-> device: {}'.format(l_d))
+			self._logger.debug('display_all-> device: {}'.format(l_d))
 			self.__display_all_properties(l_d)
 		except client.SunSpecClientError as l_e:
 			print('Error: %s' % (l_e))
