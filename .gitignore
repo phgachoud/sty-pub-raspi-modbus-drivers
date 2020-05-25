@@ -35,3 +35,4 @@ system.log
 application.log
 
 angular/sit_ngClient/src/environments/environment.dev.ts
+__pycache__
