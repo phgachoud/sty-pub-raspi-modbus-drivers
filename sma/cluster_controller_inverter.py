@@ -36,8 +36,8 @@
 try:
 	import sys
 	import os, errno
-	sys.path.append(os.path.join(os.path.dirname(__file__), 'lib')) #the way to import directories
-	sys.path.append(os.path.join(os.path.dirname(__file__), 'lib/register_types')) #the way to import directories
+	sys.path.append(os.path.join(os.path.dirname(__file__), '../lib')) #the way to import directories
+	sys.path.append(os.path.join(os.path.dirname(__file__), '../lib/register_types')) #the way to import directories
 	sys.path.append(os.path.join(os.path.dirname(__file__), '../lib/third_party/SunriseSunsetCalculator')) #the way to import directories
 	from pymodbus.constants import Endian
 	from pymodbus.exceptions import ModbusException
