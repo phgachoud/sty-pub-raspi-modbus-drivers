@@ -5,10 +5,7 @@
 #
 #            -h or --help for more informations about use
 #
-#
-#
-#
-#
+#			Logging into /var/log/solarity/file_name.log
 #
 #       CALL SAMPLE:
 #			/data/solarity/sit-raspi/modbus/cluster_controller_inverter.py --host_ip '192.168.0.74' --host_mac '00:90:E8:73:0A:D6' --store_values --raise_event --slave_address 3-7
@@ -22,14 +19,29 @@
 #		sudo apt install python3-pip
 #		sudo pip3 install requests click pymodbus 
 #
-#       CALL PARAMETERS:
-#               1) 
-#
+#		*************************************************************************************************
 #       @author: Philippe Gachoud
 #       @creation: 20200423
 #       @last modification:
 #       @version: 1.0
 #       @URL: $URL
+#		*************************************************************************************************
+#		Copyright (C) 2020 Solarity spa
+
+#		This library is free software; you can redistribute it and/or
+#		modify it under the terms of the GNU Lesser General Public
+#		License as published by the Free Software Foundation; either
+#		version 2.1 of the License, or (at your option) any later version.
+#
+#		This library is distributed in the hope that it will be useful,
+#		but WITHOUT ANY WARRANTY; without even the implied warranty of
+#		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#		Lesser General Public License for more details.
+#
+#		You should have received a copy of the GNU Lesser General Public
+#		License along with this library; if not, write to the Free Software
+#		Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+#		*************************************************************************************************
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 # INCLUDES

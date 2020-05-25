@@ -3,6 +3,8 @@
 #       DESCRIPTION: 
 #			cluster controller script to get data from modbus and store them into csv file
 #
+#            -h or --help for more informations about use
+#
 #			Logging into /var/log/solarity/file_name.log
 #
 #       CALL SAMPLE:
