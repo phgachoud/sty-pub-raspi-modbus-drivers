@@ -161,6 +161,8 @@ class SunspecDevice(object):
 			self._logger.setLevel(logging.DEBUG)
 			self.__console_handler.setLevel(logging.ERROR)
 			self.__file_handler.setLevel(logging.DEBUG)
+		if self.__args.display_all:
+			self.display_all()
 			
 		if self.__args.store_values:
 			if self.device_is_reachable():
@@ -190,6 +192,19 @@ class SunspecDevice(object):
 	def display_all(self):
 		"""
 		"""
+		try:
+			l_d = self.get_device()
+
+			self.__display_all_properties(l_d)
+		except client.SunSpecClientError as l_e:
+			print('Error: %s' % (l_e))
+			self._logger.error('Error: %s' % (l_e))
+			raise l_e
+		except Exception as l_e:
+			self._logger.exception("Exception occured: %s" % (l_e))
+			print('Error: %s' % (l_e))
+			self._logger.error('Error: %s' % (l_e))
+			raise l_e
 
 	def test(self):
 		"""
@@ -508,10 +523,11 @@ def main():
 		l_obj.execute_corresponding_args()
 #		l_id.test()
 		pass
-	except KeyboardInterrupt:
+	except KeyboardInterrupt as l_e:
 		logger.exception("Keyboard interruption")
-	except Exception:
+	except Exception as l_e:
 		logger.exception("Exception occured")
+		raise l_e
 	finally:
 		logger.info("Main method end -- end of script")
 
