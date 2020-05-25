@@ -38,6 +38,7 @@ try:
 	import os, errno
 	sys.path.append(os.path.join(os.path.dirname(__file__), 'lib')) #the way to import directories
 	sys.path.append(os.path.join(os.path.dirname(__file__), 'lib/register_types')) #the way to import directories
+	sys.path.append(os.path.join(os.path.dirname(__file__), '../lib/third_party/SunriseSunsetCalculator')) #the way to import directories
 	from pymodbus.constants import Endian
 	from pymodbus.exceptions import ModbusException
 	import logging # http://www.onlamp.com/pub/a/python/2005/06/02/logging.html
@@ -72,6 +73,7 @@ class ClusterControllerInverter(ClusterController):
 
 	DEFAULT_SLAVE_ADDRESS = 3
 	MIN_W_FOR_RAISE_EVENT_GENERATION = 2000
+	PARSER_DESCRIPTION = 'Actions with sma cluster controller inverter.  ' + SitConstants.DEFAULT_HELP_LICENSE_NOTICE
 
 # CLASS ATTRIBUTES
 

@@ -74,6 +74,7 @@ class SitModbusDevice (object):
 
 	LOG_FILE_PATH = '/var/log/solarity'
 	DEFAULT_CSV_FILE_LOCATION = '/var/solarity' #without ending slash
+	PARSER_DESCRIPTION = 'Actions with modbus device. ' + SitConstants.DEFAULT_HELP_LICENSE_NOTICE
 
 # VARIABLES
 	_logger = None
@@ -716,7 +717,7 @@ class SitModbusDevice (object):
 		override add_arg_parse if necessary
 		"""
 		"""App help"""
-		self._parser = argparse.ArgumentParser(description='Actions with {}'.format(self.__class__))
+		self._parser = argparse.ArgumentParser(description=self.PARSER_DESCRIPTION)
 		self.add_arg_parse()
 		l_args = self._parser.parse_args()
 		self._args = l_args

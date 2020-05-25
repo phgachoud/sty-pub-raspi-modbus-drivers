@@ -1,19 +1,12 @@
 #!/usr/bin/env python3
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 #       DESCRIPTION: 
+#			cluster controller script to get data from modbus and store them into csv file
+#
+#			Logging into /var/log/solarity/file_name.log
 #
 #       CALL SAMPLE:
 #			/data/solarity/sit-raspi/modbus/cluster_controller.py --host_ip '192.168.0.74' --host_mac '00:90:E8:73:0A:D6' --store_values --raise_event
-#	
-# CRONTAB ENTRY	
-## CLUSTER CONTROLLER
-#* 5-23 * * * ~/data/solarity/sit-raspi/modbus/cluster_controller.py --host_ip '192.168.0.81' --host_mac '00:40:AD:A3:AC:48' --store_values --raise_event > /dev/null
-## INVERTERS
-#* 5-23 * * * ~/data/solarity/sit-raspi/modbus/cluster_controller_inverter.py --host_ip '192.168.0.81' --host_mac '00:40:AD:A3:AC:48' --store_values --raise_event --slave_address 3-7 > /dev/null
-# MAIL REPORT DAILY
-#0 18 * * * /data/solarity/sit-raspi/scripts/sit-email-report-with-var-solarity.sh operaciones@solarityenergia.com
-# ARCHIVE_DATA
-#10 0 * * * /data/solarity/sit-raspi/scripts/sit-inverter-data-archive-csv.sh
 #	
 #	REQUIRE
 #		**** PYTHON *****
@@ -24,14 +17,30 @@
 #		sudo apt install python3-pip
 #		sudo pip3 install requests click pymodbus 
 #
-#       CALL PARAMETERS:
-#               1) 
 #
+#		*************************************************************************************************
 #       @author: Philippe Gachoud
 #       @creation: 20200403
 #       @last modification:
 #       @version: 1.0
 #       @URL: $URL
+#		*************************************************************************************************
+#		Copyright (C) 2020 Solarity spa
+
+#		This library is free software; you can redistribute it and/or
+#		modify it under the terms of the GNU Lesser General Public
+#		License as published by the Free Software Foundation; either
+#		version 2.1 of the License, or (at your option) any later version.
+#
+#		This library is distributed in the hope that it will be useful,
+#		but WITHOUT ANY WARRANTY; without even the implied warranty of
+#		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#		Lesser General Public License for more details.
+#
+#		You should have received a copy of the GNU Lesser General Public
+#		License along with this library; if not, write to the Free Software
+#		Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+#		*************************************************************************************************
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 # INCLUDES
@@ -76,6 +85,7 @@ class ClusterController(SitModbusDevice):
 	DEFAULT_MODBUS_PORT = 502
 	DEFAULT_TARGET_MODE = SitModbusDevice.TARGET_MODE_TCP
 	MIN_W_FOR_RAISE_EVENT_GENERATION = 2000
+	PARSER_DESCRIPTION = 'Actions with sma cluster controller device. ' + SitConstants.DEFAULT_HELP_LICENSE_NOTICE
 
 # CLASS ATTRIBUTES
 

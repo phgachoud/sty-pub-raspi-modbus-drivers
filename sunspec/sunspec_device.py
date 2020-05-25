@@ -10,8 +10,6 @@
 #
 #       CALL SAMPLE:
 #               Usage /data/solarity/sit-raspi/sty-pub-raspi-modbus-drivers/sunspec/sunspec_device.py --host_ip '192.168.0.68' --host_mac 'b8:27:eb:e6:bb:3f' --longitude='-70.941830' --lattitude='-33.669959' --store_values --device_type='abb' -v -t --slave_address=126
-#			A typical call into a cronjob
-#				* 5-23 * * * /data/solarity/sit-raspi/sty-pub-raspi-modbus-drivers/sunspec/sunspec_device.py --host_ip '192.168.0.68' --host_mac 'b8:27:eb:e6:bb:3f' --longitude='-70.941830' --lattitude='-33.669959' --store_values --device_type='abb' -v -t --slave_address=126
 #		
 #		REQUIRE
 #			sudo apt-get install python3-serial or sudo apt-get install python-serial
@@ -19,8 +17,6 @@
 #			sudo apt install python3-pip
 #			sudo pip3 install serial #in case of error unsupported operand type(s) for -=: 'Retry' and 'int' sudo pip3 install --upgrade setuptools
 #
-#       CALL PARAMETERS:
-#               1) 
 #
 #		*************************************************************************************************
 #       @author: Philippe Gachoud
