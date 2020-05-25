@@ -52,6 +52,7 @@ try:
 	from sit_logger import SitLogger
 	from sit_modbus_register import SitModbusRegister
 	from sit_json_conf import SitJsonConf
+	from sit_constants import SitConstants
 
 	#sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))) + '/DLSS/dlss_libs/')
 except ImportError as l_err:
