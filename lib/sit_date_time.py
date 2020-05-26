@@ -20,7 +20,7 @@
 try:
 	import sys
 	import os.path
-	sys.path.append(os.path.join(os.path.dirname(__file__), './lib/third_party/SunriseSunsetCalculator/'))
+	sys.path.append(os.path.join(os.path.dirname(__file__), './third_party/SunriseSunsetCalculator/'))
 #	import os, errno
 #	import logging # http://www.onlamp.com/pub/a/python/2005/06/02/logging.html
 #	from logging import handlers
