@@ -4,24 +4,36 @@
 #			https://github.com/riptideio/pymodbus
 #
 #       CALL SAMPLE:
-#                sudo /home/pg/data/solarity/sit-raspi/current_monitoring/rs485_to_usb/janitza_UMG604.py --channel 1 --host_ip 172.16.10.139 --host_mac b8:27:eb:b0:36:2f -v --store_values
-#       CALL PARAMETERS:
+#                /data/solarity/sit-raspi/sty-pub-raspi-modbus-drivers/sma/janitza_UMG604.py --channel 1 --host_ip 172.16.10.139 --host_mac b8:27:eb:b0:36:2f -v --store_values
 #
-#               1) 
 #	REQUIRE
-#		sudo apt-get install python-pygments python-pip python-pymodbus python3-pip
-#		sudo pip3 install -U pymodbus
-#		sudo pip3 install click
-#		sudo pip3 install requests
-#		sudo pip3 install prompt_toolkit --upgrade
-#		sudo pip install -U pymodbus click requests prompt_toolkit 
-#
-#		**** PYTHON 3 *****
 #		sudo apt install python3-pip
 #		sudo pip3 install requests click pymodbus prompt_toolkit
 #
+#		*************************************************************************************************
 #       @author: Philippe Gachoud
 #       @creation: 20191008
+#       @last modification:
+#       @version: 1.0
+#       @URL: $URL
+#		*************************************************************************************************
+#		Copyright (C) 2020 Solarity spa
+#
+#		This library is free software; you can redistribute it and/or
+#		modify it under the terms of the GNU Lesser General Public
+#		License as published by the Free Software Foundation; either
+#		version 2.1 of the License, or (at your option) any later version.
+#
+#		This library is distributed in the hope that it will be useful,
+#		but WITHOUT ANY WARRANTY; without even the implied warranty of
+#		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#		Lesser General Public License for more details.
+#
+#		You should have received a copy of the GNU Lesser General Public
+#		License along with this library; if not, write to the Free Software
+#		Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+#		*************************************************************************************************
+#
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 # INCLUDES
@@ -29,6 +41,7 @@ try:
 	import sys
 	import os.path
 	import os, errno
+	sys.path.append(os.path.join(os.path.dirname(__file__), '../lib')) #the way to import directories
 	import logging # http://www.onlamp.com/pub/a/python/2005/06/02/logging.html
 	from logging import handlers
 	import csv
@@ -51,7 +64,7 @@ try:
 	from pymodbus.payload import BinaryPayloadDecoder
 	from collections import OrderedDict
 
-	#sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))) + '/DLSS/dlss_libs/')
+	from sit_constants import SitConstants
 except ImportError as l_err:
 	print("ImportError: {0}".format(l_err))
 	raise l_err
@@ -67,6 +80,7 @@ class Janitza_UMG604:
 
 	LOG_FILE_PATH = '/var/log/solarity'
 	DEFAULT_CSV_FILE_LOCATION = '/var/solarity' #without ending slash
+	PARSER_DESCRIPTION = 'Actions with Janitza_UMG604. ' + SitConstants.DEFAULT_HELP_LICENSE_NOTICE
 
 # VARIABLES
 	__logger = None
@@ -751,7 +765,7 @@ class Janitza_UMG604:
 	Parsing arguments
 	"""
 	def init_arg_parse(self):
-		self.__parser = argparse.ArgumentParser(description='Actions with Legrand power meter 14671')
+		self._parser = argparse.ArgumentParser(description=self.PARSER_DESCRIPTION)
 		self.__parser.add_argument('-v', '--verbose', help='increase output verbosity', action="store_true")
 		self.__parser.add_argument('-s', '--store_values', help='Store values into csv file', action="store_true")
 		self.__parser.add_argument('-d', '--display_only', help='Only display read value, doesnt do the associated action (as logger INFO level)', action="store_true")

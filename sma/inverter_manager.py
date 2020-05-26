@@ -83,6 +83,7 @@ class InverterManager(SitModbusDevice):
 	DEFAULT_MODBUS_PORT = 502
 	DEFAULT_TARGET_MODE = SitModbusDevice.TARGET_MODE_TCP
 	MIN_W_FOR_RAISE_EVENT_GENERATION = 1000
+	PARSER_DESCRIPTION = 'Actions with sma inverter manager. ' + SitConstants.DEFAULT_HELP_LICENSE_NOTICE
 
 # CLASS ATTRIBUTES
 
