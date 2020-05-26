@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-#       DESCRIPTION: 
+#       DESCRIPTION: Operations with sma inverter manager, see --help for more details
 #
 #       CALL SAMPLE:
 #			/data/solarity/sit-raspi/sty-pub-raspi-modbus-drivers/sma/inverter_manager.py --host_ip '192.168.0.74' --host_mac '00:90:E8:73:0A:D6' --store_values --raise_event
@@ -8,7 +8,7 @@
 #	
 #		REQUIRE
 #			sudo apt-get install python3-serial or sudo apt-get install python-serial
-#			sunspec dependency: git submodule update --init --recursive
+#			dependencies: git submodule update --init --recursive
 #			sudo apt install python3-pip
 #			sudo pip3 install serial #in case of error unsupported operand type(s) for -=: 'Retry' and 'int' sudo pip3 install --upgrade setuptools
 #

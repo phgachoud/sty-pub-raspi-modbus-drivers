@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-#       DESCRIPTION: 
-#			https://github.com/riptideio/pymodbus
+#       DESCRIPTION: Operations with janitza, see --help for more details
 #
 #       CALL SAMPLE:
 #                /data/solarity/sit-raspi/sty-pub-raspi-modbus-drivers/sma/janitza_UMG604.py --channel 1 --host_ip 172.16.10.139 --host_mac b8:27:eb:b0:36:2f -v --store_values
@@ -9,6 +8,7 @@
 #	REQUIRE
 #		sudo apt install python3-pip
 #		sudo pip3 install requests click pymodbus prompt_toolkit
+#		sudo pip3 install serial #in case of error unsupported operand type(s) for -=: 'Retry' and 'int' sudo pip3 install --upgrade setuptools
 #
 #		*************************************************************************************************
 #       @author: Philippe Gachoud
