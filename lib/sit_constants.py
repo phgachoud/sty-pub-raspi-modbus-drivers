@@ -22,7 +22,7 @@ class SitConstants(object):
 
 	DEFAULT_HELP_LICENSE_NOTICE = """Solarity modbus library 
 									\n Copyright (C) 2019 Philippe Gachoud (ph.gachoud@gmail.com)
-									\n Gnomovision comes with ABSOLUTELY NO WARRANTY; for details
-									\n type '--help'.  This is free software, and you are welcome
-									\n to redistribute it under certain conditions; type '--help'
-									\n for details."""
+									\n This library comes with ABSOLUTELY NO WARRANTY; for details
+									\n type '--help'.  This is free software under LGPL_v2 LICENSE, 
+									\n and you are welcome to redistribute it under certain conditions; 
+									\n type '--help' for details."""
