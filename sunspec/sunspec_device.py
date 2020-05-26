@@ -319,7 +319,7 @@ class SunspecDevice(object):
 			except socket.error:
 				assert False, "Host ip address is invalid"
 
-		l_dir = self.DEFAULT_CSV_FILE_LOCATION + '/' + str(datetime.today().year) + '/' + str(datetime.today().month)
+		l_dir = self.DEFAULT_CSV_FILE_LOCATION + '/' + str(datetime.today().year) + '/' + '{:02d}'.format(datetime.today().month)
 		l_result = l_dir + '/' \
 			+ datetime.today().strftime('%Y%m%d') + '_' + self.__args.host_mac.replace(':', '-') + '_' + self.__args.host_ip 
 		if self.__args.slave_address:
