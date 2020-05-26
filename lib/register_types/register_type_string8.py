@@ -57,7 +57,7 @@ class RegisterTypeString8(SitModbusRegister):
 
 # VARIABLES
 	_logger = None
-	_words_count = 1
+	_words_count = 8
 	_byte_order = Endian.Big
 	_word_order = Endian.Big
 
