@@ -5,6 +5,8 @@
 #       CALL SAMPLE:
 #                /data/solarity/sit-raspi/sty-pub-raspi-modbus-drivers/adtek/adtek_cpm_20.py --channel 1 --host_ip 172.16.10.139 --host_mac b8:27:eb:b0:36:2f -v --store_values
 #
+#		TODO: unify with sit_modbus_device
+#
 #	REQUIRE
 #		**** PYTHON 3 *****
 #		sudo apt install python3-pip
@@ -583,17 +585,17 @@ class AdtekCpm20:
 			if self.is_connected():
 				self.disconnect()
 		
-	"""
-	Self explaining
-	"""
 	def is_connected(self):
+		"""
+		Self explaining
+		"""
 		#self.__logger.debug("is_connected-> %s, modbusclient:%s" % (self.__is_connected, self.__modbus_client))
 		return self.__modbus_client is not None and self.__is_connected
 
-	"""
-	Disconnects modbus client
-	"""
 	def disconnect(self):
+		"""
+		Disconnects modbus client
+		"""
 		assert self.is_connected()
 		assert self.__modbus_client is not None
 
@@ -605,10 +607,10 @@ class AdtekCpm20:
 			self.__logger.exception("disconnect->Exception occured msg:" + l_e.message)
 			raise l_e
 
-	"""
-	Parsing arguments
-	"""
 	def init_arg_parse(self):
+		"""
+		Parsing arguments
+		"""
 		self._parser = argparse.ArgumentParser(description=self.PARSER_DESCRIPTION)
 		self.__parser.add_argument('-v', '--verbose', help='increase output verbosity', action="store_true")
 		self.__parser.add_argument('-s', '--store_values', help='Store values into csv file', action="store_true")

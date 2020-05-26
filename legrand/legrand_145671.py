@@ -1,26 +1,45 @@
 #!/usr/bin/env python
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-#       DESCRIPTION: 
+#       DESCRIPTION: Operations with legrand 145671, see --help for more details
 #
 #       CALL SAMPLE:
-#               Usage  ./myscript.py
-#       CALL PARAMETERS:
-#               1) 
+#               Usage  ~/data/solarity/sit-raspi/sty-pub-raspi-modbus-drivers/legrand/legrand_145671.py
+#
 #	REQUIRE
 #		sudo apt-get install python-pygments python-pip python-pymodbus python3-pip
-#		sudo pip3 install -U pymodbus
-#		sudo pip3 install click
-#		sudo pip3 install requests
-#		sudo pip3 install prompt_toolkit --upgrade
-#
-#
 #		sudo pip3 install requests click pymodbus prompt_toolkit
 #
+#		TODO: unify with sit_modbus_device
+#
+#	REQUIRE
+#		**** PYTHON 3 *****
+#		sudo apt install python3-pip
+#		sudo pip3 install requests click pymodbus prompt_toolkit
+#
+#
+#		*************************************************************************************************
 #       @author: Philippe Gachoud
 #       @creation: 20181121
 #       @last modification:
 #       @version: 1.0
 #       @URL: $URL
+#		*************************************************************************************************
+#		Copyright (C) 2020 Solarity spa
+#
+#		This library is free software; you can redistribute it and/or
+#		modify it under the terms of the GNU Lesser General Public
+#		License as published by the Free Software Foundation; either
+#		version 2.1 of the License, or (at your option) any later version.
+#
+#		This library is distributed in the hope that it will be useful,
+#		but WITHOUT ANY WARRANTY; without even the implied warranty of
+#		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#		Lesser General Public License for more details.
+#
+#		You should have received a copy of the GNU Lesser General Public
+#		License along with this library; if not, write to the Free Software
+#		Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+#		*************************************************************************************************
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 # INCLUDES
