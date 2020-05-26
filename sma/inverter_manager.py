@@ -3,29 +3,40 @@
 #       DESCRIPTION: 
 #
 #       CALL SAMPLE:
-#			/data/solarity/sit-raspi/modbus/inverter_manager.py --host_ip '192.168.0.74' --host_mac '00:90:E8:73:0A:D6' --store_values --raise_event
+#			/data/solarity/sit-raspi/sty-pub-raspi-modbus-drivers/sma/inverter_manager.py --host_ip '192.168.0.74' --host_mac '00:90:E8:73:0A:D6' --store_values --raise_event
 #	
-# CRONTAB ENTRY	
-#INVERTER MANAGER AND INVERTERS MONITORING
-#* 5-23 * * * /data/solarity/sit-raspi/modbus/inverter_manager.py --host_ip '192.168.0.74' --host_mac '00:90:E8:73:0A:D6' --store_values --raise_event > /dev/null
-#* 5-23 * * * sleep 10;/data/solarity/sit-raspi/modbus/sunny_tripower_60.py --host_ip '192.168.0.74' --host_mac '00:90:E8:73:0A:D6' --store_values --raise_event --slave_address 126 > /dev/null
-#* 5-23 * * * sleep 20;/data/solarity/sit-raspi/modbus/sunny_tripower_60.py --host_ip '192.168.0.74' --host_mac '00:90:E8:73:0A:D6' --store_values --raise_event --slave_address 127 > /dev/null
-#* 5-23 * * * sleep 30;/data/solarity/sit-raspi/modbus/sunny_tripower_60.py --host_ip '192.168.0.74' --host_mac '00:90:E8:73:0A:D6' --store_values --raise_event --slave_address 128 > /dev/null
-# MAIL REPORT DAILY
-#0 18 * * * /data/solarity/sit-raspi/scripts/sit-email-report-with-var-solarity.sh operaciones@solarityenergia.com
-# ARCHIVE_DATA
-#10 0 * * * /data/solarity/sit-raspi/scripts/sit-inverter-data-archive-csv.sh
 #	
-#	REQUIRE
+#		REQUIRE
+#			sudo apt-get install python3-serial or sudo apt-get install python-serial
+#			sunspec dependency: git submodule update --init --recursive
+#			sudo apt install python3-pip
+#			sudo pip3 install serial #in case of error unsupported operand type(s) for -=: 'Retry' and 'int' sudo pip3 install --upgrade setuptools
 #
-#       CALL PARAMETERS:
-#               1) 
 #
+#		*************************************************************************************************
 #       @author: Philippe Gachoud
 #       @creation: 20200403
 #       @last modification:
 #       @version: 1.0
 #       @URL: $URL
+#		*************************************************************************************************
+#		Copyright (C) 2020 Solarity spa
+#
+#		This library is free software; you can redistribute it and/or
+#		modify it under the terms of the GNU Lesser General Public
+#		License as published by the Free Software Foundation; either
+#		version 2.1 of the License, or (at your option) any later version.
+#
+#		This library is distributed in the hope that it will be useful,
+#		but WITHOUT ANY WARRANTY; without even the implied warranty of
+#		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#		Lesser General Public License for more details.
+#
+#		You should have received a copy of the GNU Lesser General Public
+#		License along with this library; if not, write to the Free Software
+#		Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+#		*************************************************************************************************
+#
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 # INCLUDES
