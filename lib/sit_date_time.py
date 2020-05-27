@@ -45,6 +45,7 @@ try:
 #	import jsonpickle # pip install jsonpickle
 #	import json
 	from sit_json_conf import SitJsonConf
+	from sit_util import SitUtils
 except ImportError as l_err:
 	print("ImportError: {0}".format(l_err))
 	raise l_err
@@ -67,6 +68,25 @@ class SitDateTime(object):
 	def __init__(self):
 		self._logger = SitLogger().new_logger(__name__)
 
+	def localOffsetHours(self):
+		"""
+		returns local offset in hours
+		ex. Chile -3 or -4
+		"""
+		l_res = 0
+		l_cmd = 'date +%z'
+		try:
+			l_code, l_stdout, l_stderr = SitUtils.system_call(l_cmd)
+		except Exception as l_e:
+			self._logger.error ('localOffsetHours error'.format (l_e))
+			raise l_e
+		assert l_res <= -3
+		self._logger.debug('localOffsetHours-> cmd_res:{} res:{}'.format(l_stdout, l_res))
+		l_res = int(l_cmd)
+
+		return l_res
+		
+		return l_res
 
 	def time_is_between(self, a_time_to_check, an_on_time, an_off_time):
 		"""

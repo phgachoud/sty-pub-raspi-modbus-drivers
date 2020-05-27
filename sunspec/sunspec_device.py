@@ -65,6 +65,7 @@ try:
 	from sunrise_sunset import SunriseSunset
 	from pprint import pprint
 	from sit_constants import SitConstants
+	from sit_date_time import SitDateTime
 #	import jsonpickle # pip install jsonpickle
 #	import json
 except ImportError as l_err:
@@ -180,7 +181,7 @@ class SunspecDevice(object):
 			self._logger.info("Device type is SMA, no sunset sunrise check, always true")
 		else:
 			l_ss = SunriseSunset(datetime.now(), latitude=float(self.__args.lattitude),
-			longitude=float(self.__args.longitude), localOffset=-3)
+			longitude=float(self.__args.longitude), localOffset=SitUtils.localOffset())
 			self._logger.info("device_is_reachable-> longitude:%s lattitude:%s" % (self.__args.longitude, self.__args.lattitude))
 			l_rise_time, l_set_time = l_ss.calculate()
 			l_result = l_rise_time + timedelta(seconds=self.SECONDS_INTERVAL_FOR_SUNRISE_VALIDATION) < datetime.now() and \
