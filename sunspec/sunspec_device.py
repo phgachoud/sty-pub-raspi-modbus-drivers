@@ -111,7 +111,7 @@ class SunspecDevice(object):
 			self.__console_handler.setFormatter(fmt)
 			self.__console_handler.setLevel(self.DEFAULT_LOGGING_LEVEL)
 
-			self.__file_handler = handlers.RotatingFileHandler("{0}/{1}_{2}.log".format(self.LOG_FILE_PATH, os.path.basename(__file__), self.__args.host_mac.replace(':', '-')), maxBytes=5242880, backupCount=10)
+			self.__file_handler = handlers.RotatingFileHandler("{0}/{1}_{2}.log".format(self.LOG_FILE_PATH, os.path.basename(__file__), self._args.host_mac.replace(':', '-')), maxBytes=5242880, backupCount=10)
 			self.__file_handler.setFormatter(fmt)
 			self.__file_handler.setLevel(self.DEFAULT_FILE_LOGGING_LEVEL)
 
@@ -134,7 +134,7 @@ class SunspecDevice(object):
 		self.__parser = argparse.ArgumentParser(description=self.PARSER_DESCRIPTION)
 		self.__parser.add_argument('-v', '--verbose', help='increase output verbosity', action="store_true")
 		self.__parser.add_argument('-s', '--store_values', help='Stores values into csv file located into ' + self.DEFAULT_CSV_FILE_LOCATION, action="store_true")
-		self.__parser.add_argument('-t', '--test', help='Runs test method', action="store_true")
+		self.__parser.add_argument('-t', '--test', help='Runs test method, and adds test to exported file', action="store_true")
 		self.__parser.add_argument('-y', '--display_all', help='Displays all attributes found for sunspec device', action="store_true")
 		
 		#self.__parser.add_argument('-u', '--base_url', help='NOT_IMPLEMENTED:Gives the base URL for requests actions', nargs='?', default=self.DEFAULT_BASE_URL)
@@ -146,15 +146,15 @@ class SunspecDevice(object):
 		l_required_named.add_argument('-a', '--lattitude', help='Lattitude coordinate (beware timezone is set to Chile)', nargs='?', required=True)
 		l_required_named.add_argument('-d', '--device_type', help='Device Type:' + ('|'.join(str(l) for l in self.DEVICE_TYPES_ARRAY)), nargs='?', required=True)
 		args = self.__parser.parse_args()
-		self.__args = args
+		self._args = args
 
 	def execute_corresponding_args( self ):
 		"""
 			Parsing arguments and calling corresponding functions
 		"""
-		if self.__args.test:
+		if self._args.test:
 			self.test()
-		if self.__args.verbose:
+		if self._args.verbose:
 			self._logger.setLevel(logging.DEBUG)
 			self.__console_handler.setLevel(logging.DEBUG)
 			self.__file_handler.setLevel(logging.DEBUG)
@@ -162,10 +162,10 @@ class SunspecDevice(object):
 			self._logger.setLevel(logging.DEBUG)
 			self.__console_handler.setLevel(logging.ERROR)
 			self.__file_handler.setLevel(logging.DEBUG)
-		if self.__args.display_all:
+		if self._args.display_all:
 			self.display_all()
 			
-		if self.__args.store_values:
+		if self._args.store_values:
 			if self.device_is_reachable():
 				l_device = self.get_device()
 				self.store_values_into_csv(self.get_csv_row(l_device), l_device)
@@ -176,13 +176,13 @@ class SunspecDevice(object):
 		Is Device reachable if abb device
 			going through sunset-sunrise and self.DEVICE_TYPES_ARRAY
 		"""
-		if self.__args.device_type == 'sma':
+		if self._args.device_type == 'sma':
 			l_result = True
 			self._logger.info("Device type is SMA, no sunset sunrise check, always true")
 		else:
-			l_ss = SunriseSunset(datetime.now(), latitude=float(self.__args.lattitude),
-			longitude=float(self.__args.longitude), localOffset=SitUtils.localOffset())
-			self._logger.info("device_is_reachable-> longitude:%s lattitude:%s" % (self.__args.longitude, self.__args.lattitude))
+			l_ss = SunriseSunset(datetime.now(), latitude=float(self._args.lattitude),
+			longitude=float(self._args.longitude), localOffset=SitUtils.localOffset())
+			self._logger.info("device_is_reachable-> longitude:%s lattitude:%s" % (self._args.longitude, self._args.lattitude))
 			l_rise_time, l_set_time = l_ss.calculate()
 			l_result = l_rise_time + timedelta(seconds=self.SECONDS_INTERVAL_FOR_SUNRISE_VALIDATION) < datetime.now() and \
 				l_set_time - timedelta(seconds=self.SECONDS_INTERVAL_FOR_SUNSET_VALIDATION) > datetime.now()
@@ -311,24 +311,27 @@ class SunspecDevice(object):
 	"""
 	def get_csv_file_path(self):
 		#require
-		self._logger.debug("host ip:%s" % self.__args.host_ip)
-		assert self.__args.host_ip, "host ip is empty"
-		assert self.__args.host_mac, "host mac is empty"
+		self._logger.debug("host ip:%s" % self._args.host_ip)
+		assert self._args.host_ip, "host ip is empty"
+		assert self._args.host_mac, "host mac is empty"
 		if __debug__:
 			try:
-				socket.inet_aton(self.__args.host_ip)
+				socket.inet_aton(self._args.host_ip)
 			except socket.error:
 				assert False, "Host ip address is invalid"
 
 		l_dir = self.DEFAULT_CSV_FILE_LOCATION + '/' + str(datetime.today().year) + '/' + '{:02d}'.format(datetime.today().month)
 		l_result = l_dir + '/' \
-			+ datetime.today().strftime('%Y%m%d') + '_' + self.__args.host_mac.replace(':', '-') + '_' + self.__args.host_ip 
-		if self.__args.slave_address:
-			l_result = l_result + '_' + self.__args.slave_address
+			+ datetime.today().strftime('%Y%m%d') + '_' + self._args.host_mac.replace(':', '-') + '_' + self._args.host_ip 
+		if self._args.slave_address:
+			l_result = l_result + '_' + self._args.slave_address
 		else:
 			l_result = l_result + '_' + self.DEFAULT_SLAVE_ADDRESS
 			
-		l_result = l_result + '_' + os.path.basename(__file__) + '.csv'
+		l_result = l_result + '_' + os.path.basename(__file__)
+		if self._args.test:
+			l_result +=  '_test_'
+		l_result +=  '.csv'
 
 		try:
 			os.makedirs(l_dir)
@@ -346,10 +349,10 @@ class SunspecDevice(object):
 		@returns a device with inverter properties read
 		"""
 		l_modbus_slave_address = self.DEFAULT_SLAVE_ADDRESS #Default 1
-		if self.__args.slave_address:
-			l_modbus_slave_address = self.__args.slave_address
-		l_ip_address = self.__args.host_ip
-		self._logger.info("-->IP:%s MAC:%s Slave_address:%s " % (l_ip_address, self.__args.host_mac, l_modbus_slave_address))
+		if self._args.slave_address:
+			l_modbus_slave_address = self._args.slave_address
+		l_ip_address = self._args.host_ip
+		self._logger.info("-->IP:%s MAC:%s Slave_address:%s " % (l_ip_address, self._args.host_mac, l_modbus_slave_address))
 		l_timeout = 2.0 #Default 2.0
 
 		try:
@@ -440,17 +443,17 @@ class SunspecDevice(object):
 			#Ip address of device
 			l_row = []
 			l_row.append('#Ip')
-			l_row.append(self.__args.host_ip)
+			l_row.append(self._args.host_ip)
 			a_csv_writter.writerow(l_row)
 			#MAC address of device
 			l_row = []
 			l_row.append('#MAC')
-			l_row.append(self.__args.host_mac)
+			l_row.append(self._args.host_mac)
 			a_csv_writter.writerow(l_row)
 			#Slave address of device
 			l_row = []
 			l_row.append('#Slave_address')
-			l_row.append(self.__args.slave_address)
+			l_row.append(self._args.slave_address)
 			a_csv_writter.writerow(l_row)
 			#Model name
 			l_row = []
