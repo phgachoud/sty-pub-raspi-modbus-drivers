@@ -247,7 +247,7 @@ class Janitza_UMG604:
 				assert False, "Host ip address is invalid"
 				raise l_e
 
-		l_dir = self.DEFAULT_CSV_FILE_LOCATION + '/' + str(datetime.today().year) + '/' + str(datetime.today().month)
+		l_dir = self.DEFAULT_CSV_FILE_LOCATION + '/' + str(datetime.today().year) + '/' + '{:02d}'.format(datetime.today().month)
 		l_result = (l_dir + '/' +
 			datetime.today().strftime('%Y%m%d') + '_' + 
 			self.__args.host_mac.replace(':', '-') + '_' + 
