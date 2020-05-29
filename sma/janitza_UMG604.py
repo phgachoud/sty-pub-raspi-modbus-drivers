@@ -766,16 +766,16 @@ class Janitza_UMG604:
 	"""
 	def init_arg_parse(self):
 		self._parser = argparse.ArgumentParser(description=self.PARSER_DESCRIPTION)
-		self.__parser.add_argument('-v', '--verbose', help='increase output verbosity', action="store_true")
-		self.__parser.add_argument('-s', '--store_values', help='Store values into csv file', action="store_true")
-		self.__parser.add_argument('-d', '--display_only', help='Only display read value, doesnt do the associated action (as logger INFO level)', action="store_true")
-		self.__parser.add_argument('-t', '--test', help='Calls test method', action="store_true")
-		self.__parser.add_argument('-u', '--base_url', help='Gives the base URL for requests actions', nargs='?', default=self.DEFAULT_BASE_URL)
-		l_required_named = self.__parser.add_argument_group('required named arguments')
+		self._parser.add_argument('-v', '--verbose', help='increase output verbosity', action="store_true")
+		self._parser.add_argument('-s', '--store_values', help='Store values into csv file', action="store_true")
+		self._parser.add_argument('-d', '--display_only', help='Only display read value, doesnt do the associated action (as logger INFO level)', action="store_true")
+		self._parser.add_argument('-t', '--test', help='Calls test method', action="store_true")
+		self._parser.add_argument('-u', '--base_url', help='Gives the base URL for requests actions', nargs='?', default=self.DEFAULT_BASE_URL)
+		l_required_named = self._parser.add_argument_group('required named arguments')
 		l_required_named.add_argument('-c', '--channel', help='Channel index', nargs='?', required=True)
 		l_required_named.add_argument('-i', '--host_ip', help='Host IP', nargs='?', required=True)
 		l_required_named.add_argument('-m', '--host_mac', help='Host MAC', nargs='?', required=True)
-		args = self.__parser.parse_args()
+		args = self._parser.parse_args()
 		self.__args = args
 
 	"""
