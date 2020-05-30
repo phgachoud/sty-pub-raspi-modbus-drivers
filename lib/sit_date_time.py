@@ -45,7 +45,7 @@ try:
 #	import jsonpickle # pip install jsonpickle
 #	import json
 	from sit_json_conf import SitJsonConf
-	from sit_util import SitUtils
+	from sit_utils import SitUtils
 except ImportError as l_err:
 	print("ImportError: {0}".format(l_err))
 	raise l_err
