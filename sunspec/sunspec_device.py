@@ -80,7 +80,7 @@ class SunspecDevice(object):
 	DEFAULT_CSV_FILE_LOCATION = '/var/solarity' #without ending slash
 	CSV_HEADER_ROW = ['Timestamp', 'A', 'AphA', 'AphB', 'AphC', 'PPVphAB', 'PPVphBC', 'PPVphCA', 'PhVphA', 'PhVphB', 'PhVphC', 'W', 'Hz', 'VA', 'VAr', 'PF', 'WH', 'DCA', 'DCW', 'TmpCab', 'TmpSnk', 'TmpOt', 'St', 'StVnd', 'Evt1', 'Evt2', 'EvtVnd1', 'EvtVnd2', 'EvtVnd3', 'EvtVnd4']
 	DEVICE_TYPES_ARRAY = ['abb', 'sma']
-	SECONDS_INTERVAL_FOR_SUNRISE_VALIDATION = 120
+	SECONDS_INTERVAL_FOR_SUNRISE_VALIDATION = 0
 	SECONDS_INTERVAL_FOR_SUNSET_VALIDATION = 0
 	DEFAULT_SLAVE_ADDRESS = 1
 	PARSER_DESCRIPTION = 'Actions with sunspec device. ' + SitConstants.DEFAULT_HELP_LICENSE_NOTICE
@@ -162,7 +162,8 @@ class SunspecDevice(object):
 			self.__console_handler.setLevel(logging.ERROR)
 			self.__file_handler.setLevel(logging.DEBUG)
 		if self.__args.display_all:
-			self.display_all()
+			if self.device_is_reachable():
+				self.display_all()
 			
 		if self.__args.store_values:
 			if self.device_is_reachable():
@@ -180,7 +181,7 @@ class SunspecDevice(object):
 			self._logger.info("Device type is SMA, no sunset sunrise check, always true")
 		else:
 			l_ss = SunriseSunset(datetime.now(), latitude=float(self.__args.lattitude),
-			longitude=float(self.__args.longitude), localOffset=-3)
+				longitude=float(self.__args.longitude), localOffset=-4)
 			self._logger.info("device_is_reachable-> longitude:%s lattitude:%s" % (self.__args.longitude, self.__args.lattitude))
 			l_rise_time, l_set_time = l_ss.calculate()
 			l_result = l_rise_time + timedelta(seconds=self.SECONDS_INTERVAL_FOR_SUNRISE_VALIDATION) < datetime.now() and \
@@ -348,7 +349,7 @@ class SunspecDevice(object):
 		if self.__args.slave_address:
 			l_modbus_slave_address = self.__args.slave_address
 		l_ip_address = self.__args.host_ip
-		self._logger.info("-->IP:%s MAC:%s Slave_address:%s " % (l_ip_address, self.__args.host_mac, l_modbus_slave_address))
+		self._logger.info("get_device-->IP:%s MAC:%s Slave_address:%s " % (l_ip_address, self.__args.host_mac, l_modbus_slave_address))
 		l_timeout = 2.0 #Default 2.0
 
 		try:
@@ -357,9 +358,6 @@ class SunspecDevice(object):
 			l_device.inverter.read() # retreives latest inverter model contents
 
 			return l_device
-		except client.ModbusClientError as l_e:
-			self._logger.error('ModbusClientError: %s' % (l_e))
-			raise l_e
 		except client.SunSpecClientError as l_e:
 			self._logger.error('SunspecClientError: %s' % (l_e))
 			raise l_e
