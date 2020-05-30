@@ -1,19 +1,30 @@
 #!/usr/bin/env python3
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-#       DESCRIPTION: 
+#       DESCRIPTION: Register short class to define behaviour of this type of register
 #
-#       CALL SAMPLE:
-#	
-#	REQUIRE
-#
-#       CALL PARAMETERS:
-#               1) 
-#
+#		*************************************************************************************************
 #       @author: Philippe Gachoud
 #       @creation: 20200421
 #       @last modification:
 #       @version: 1.0
 #       @URL: $URL
+#		*************************************************************************************************
+#		Copyright (C) 2020 Solarity spa
+#
+#		This library is free software; you can redistribute it and/or
+#		modify it under the terms of the GNU Lesser General Public
+#		License as published by the Free Software Foundation; either
+#		version 2.1 of the License, or (at your option) any later version.
+#
+#		This library is distributed in the hope that it will be useful,
+#		but WITHOUT ANY WARRANTY; without even the implied warranty of
+#		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#		Lesser General Public License for more details.
+#
+#		You should have received a copy of the GNU Lesser General Public
+#		License along with this library; if not, write to the Free Software
+#		Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+#		*************************************************************************************************
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 # INCLUDES
@@ -45,7 +56,7 @@ class RegisterTypeString16(SitModbusRegister):
 
 # VARIABLES
 	_logger = None
-	_words_count = 2
+	_words_count = 16
 	_byte_order = Endian.Big
 	_word_order = Endian.Big
 
@@ -79,6 +90,7 @@ class RegisterTypeString16(SitModbusRegister):
 		decoder = BinaryPayloadDecoder.fromRegisters(a_register_read_res.registers, byteorder=self._byte_order, wordorder=self._word_order) #https://pymodbus.readthedocs.io/en/latest/source/example/modbus_payload.html
 		#https://pymodbus.readthedocs.io/en/v1.3.2/library/payload.html?highlight=binarypayloaddecoder#pymodbus.payload.BinaryPayloadDecoder
 		l_result = decoder.decode_string(16) 
+		#self._logger.debug("register_values_string16->before decode utf=8:{}".format(l_result))
 		if len (l_result) > 0 and str(l_result[0]) == '0':
 			l_result = ''
 		else:

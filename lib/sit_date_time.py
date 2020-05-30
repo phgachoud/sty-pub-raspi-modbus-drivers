@@ -1,26 +1,39 @@
 #!/usr/bin/env python3
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 #       DESCRIPTION: 
+#			Date and times functions
 #
-#       CALL SAMPLE:
-#	
-#	REQUIRE
-#
-#       CALL PARAMETERS:
-#               1) 
-#
-#       @author: Philippe Gachoud
-#       @creation: 20200408
-#       @last modification:
-#       @version: 1.0
-#       @URL: $URL
-#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+##		*************************************************************************************************
+##       @author: Philippe Gachoud
+##       @creation: 20200408
+##       @last modification:
+##       @version: 1.0
+##       @URL: $URL
+##		*************************************************************************************************
+##		Copyright (C) 2020 Solarity spa
+##
+##		This library is free software; you can redistribute it and/or
+##		modify it under the terms of the GNU Lesser General Public
+##		License as published by the Free Software Foundation; either
+##		version 2.1 of the License, or (at your option) any later version.
+##
+##		This library is distributed in the hope that it will be useful,
+##		but WITHOUT ANY WARRANTY; without even the implied warranty of
+##		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+##		Lesser General Public License for more details.
+##
+##		You should have received a copy of the GNU Lesser General Public
+##		License along with this library; if not, write to the Free Software
+##		Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+##		*************************************************************************************************
+##
+##@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 # INCLUDES
 try:
 	import sys
 	import os.path
-	sys.path.append(os.path.join(os.path.dirname(__file__), '../current_monitoring/sunspec/SunriseSunsetCalculator'))
+	sys.path.append(os.path.join(os.path.dirname(__file__), './third_party/SunriseSunsetCalculator/'))
 #	import os, errno
 #	import logging # http://www.onlamp.com/pub/a/python/2005/06/02/logging.html
 #	from logging import handlers
@@ -32,6 +45,7 @@ try:
 #	import jsonpickle # pip install jsonpickle
 #	import json
 	from sit_json_conf import SitJsonConf
+	from sit_utils import SitUtils
 except ImportError as l_err:
 	print("ImportError: {0}".format(l_err))
 	raise l_err
@@ -54,6 +68,26 @@ class SitDateTime(object):
 	def __init__(self):
 		self._logger = SitLogger().new_logger(__name__)
 
+	def local_offset_hours(self):
+		"""
+		returns local offset in hours
+		ex. Chile -3 or -4
+		"""
+		l_res = 0
+		l_cmd = 'date +%z'
+		try:
+			l_code, l_stdout, l_stderr = SitUtils.system_call(l_cmd)
+			l_res = int(l_stdout)
+			l_res = l_res / 100
+		except Exception as l_e:
+			self._logger.error ('localOffsetHours error'.format (l_e))
+			raise l_e
+		assert l_res <= -3, 'local_offset_hours->invalid_l_res:{}'.format(l_res)
+		self._logger.debug('localOffsetHours-> cmd_res:{} res:{}'.format(l_stdout, l_res))
+
+		return l_res
+		
+		return l_res
 
 	def time_is_between(self, a_time_to_check, an_on_time, an_off_time):
 		"""
