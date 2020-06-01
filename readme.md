@@ -1,5 +1,3 @@
-CURRENTLY NOT TESTED WAIT FOR SOME DAYS TO BE READY
-
 # Summary of project
 Solarity is an enterprise involved in Photovoltaic systems. The IT department works on various projects basically to get informations from PV associated devices, show its status and do required jobs to maintain the plants. The technologies used are mostly debian linux, eiffel, python, postgresql and angular.
 
