@@ -68,7 +68,7 @@ class SitDateTime(object):
 	def __init__(self):
 		self._logger = SitLogger().new_logger(__name__)
 
-	def localOffsetHours(self):
+	def local_offset_hours(self):
 		"""
 		returns local offset in hours
 		ex. Chile -3 or -4
@@ -77,12 +77,13 @@ class SitDateTime(object):
 		l_cmd = 'date +%z'
 		try:
 			l_code, l_stdout, l_stderr = SitUtils.system_call(l_cmd)
+			l_res = int(l_stdout)
+			l_res = l_res / 100
 		except Exception as l_e:
 			self._logger.error ('localOffsetHours error'.format (l_e))
 			raise l_e
-		assert l_res <= -3
+		assert l_res <= -3, 'local_offset_hours->invalid_l_res:{}'.format(l_res)
 		self._logger.debug('localOffsetHours-> cmd_res:{} res:{}'.format(l_stdout, l_res))
-		l_res = int(l_cmd)
 
 		return l_res
 		

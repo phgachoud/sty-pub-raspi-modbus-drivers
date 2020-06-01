@@ -7,6 +7,8 @@ target/
 *.swn
 *.swo
 
+*.pyc
+
 # Log file
 *.log
 
