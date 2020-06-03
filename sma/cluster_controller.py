@@ -142,7 +142,7 @@ class ClusterController(SitModbusDevice):
 		Common devices registers
 		"""
 		assert self.valid_slave_address(a_slave_address), 'invalid a_slave_address:{}'.format(a_slave_address)
-		assert a_slave_address == 1 or a_slave_address >= 3, 'Dont ask for slave_address 2, the add_cc_only_sit_modbus_registers is done for that!'
+		assert a_slave_address == 1 or a_slave_address >= 3, 'Dont ask for slave_address 2, the add_cc_only_sit_modbus_registers is done for that! addr:{}'.format(a_slave_address)
 
 		l_reg_list = OrderedDict()
 		l_slave_address = a_slave_address
