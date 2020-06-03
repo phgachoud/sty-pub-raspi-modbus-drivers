@@ -194,8 +194,8 @@ class ClusterController(SitModbusDevice):
 		SitUtils.od_extend(l_reg_list, RegisterTypeInt16s('WSetPointDirTotal', 'Direct marketer: Active power setpoint P, in % of the maximum active power (PMAX) of the PV plant. -100-0=Load|0=No active power|0-100 generator', 40493, l_slave_address, SitModbusRegister.ACCESS_MODE_R, '%', an_is_metadata=False, a_post_set_value_call=self.sma_fix2)) 
 		SitUtils.od_extend(l_reg_list, RegisterTypeInt32u('WSetPointMan', 'Active power setpoint (manual specification)', 41167, l_slave_address, SitModbusRegister.ACCESS_MODE_R, '%', an_is_metadata=False, a_post_set_value_call=self.sma_fix2)) 
 		# IRRADIATIONS
-		SitUtils.od_extend(l_reg_list, RegisterTypeInt32u('IrradiationSurfaceTot', 'Total irradiation on the sensor surface (W/m2)', 34613, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'W/m2', an_is_metadata=False))
-		SitUtils.od_extend(l_reg_list, RegisterTypeInt32u('IrradiationExtTot', 'Total irradiation on the external irradiation sensor/pyranometer (W/m2)', 34623, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'W/m2', an_is_metadata=False))
+		# not working on sanbe, getting max_int, SitUtils.od_extend(l_reg_list, RegisterTypeInt32u('IrradiationSurfaceTot', 'Total irradiation on the sensor surface (W/m2)', 34613, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'W/m2', an_is_metadata=False))
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt32u('GHI', 'Total irradiation on the external irradiation sensor/pyranometer (W/m2)', 34623, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'W/m2', an_is_metadata=False))
 
 		self.append_modbus_registers(l_reg_list)
 
