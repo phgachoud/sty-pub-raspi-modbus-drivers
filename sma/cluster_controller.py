@@ -137,11 +137,12 @@ class ClusterController(SitModbusDevice):
 		self.invariants()
 
 
-	def add_cc_only_sit_modbus_registers(self, a_slave_address):
+	def add_common_sit_modbus_registers(self, a_slave_address):
 		"""
-		ClusterController only registers
+		Common devices registers
 		"""
 		assert self.valid_slave_address(a_slave_address), 'invalid a_slave_address:{}'.format(a_slave_address)
+		assert a_slave_address == 1 or a_slave_address >= 3, 'Dont ask for slave_address 2, the add_cc_only_sit_modbus_registers is done for that!'
 
 		l_reg_list = OrderedDict()
 		l_slave_address = a_slave_address
@@ -161,9 +162,9 @@ class ClusterController(SitModbusDevice):
 
 		self.append_modbus_registers(l_reg_list)
 
-	def add_common_sit_modbus_registers(self, a_slave_address):
+	def add_cc_only_sit_modbus_registers(self, a_slave_address):
 		"""
-		COMMON REGISTERS to ClusterController and Inverters
+		Registers particular to cluster controller
 		"""
 		assert self.valid_slave_address(a_slave_address), 'invalid a_slave_address:{}'.format(a_slave_address)
 		assert a_slave_address == 2, 'for this part slave_address should be 2'

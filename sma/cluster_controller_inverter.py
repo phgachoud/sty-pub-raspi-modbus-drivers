@@ -136,8 +136,8 @@ class ClusterControllerInverter(ClusterController):
 		"""
 			Initializes self._sit_modbus_registers
 		"""
-		self.add_cc_only_sit_modbus_registers(a_slave_address)
-		#self.add_common_sit_modbus_registers(a_slave_address)
+		self.add_common_sit_modbus_registers(a_slave_address)
+		#self.add_cc_only_sit_modbus_registers(a_slave_address)
 
 		self.invariants()
 
