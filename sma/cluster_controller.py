@@ -130,9 +130,8 @@ class ClusterController(SitModbusDevice):
 			Initializes self._sit_modbus_registers
 		"""
 		assert self.valid_slave_address(a_slave_address), 'invalid a_slave_address:{}'.format(a_slave_address)
-
-		self.add_cc_only_sit_modbus_registers(1)
-		self.add_common_sit_modbus_registers(2)
+		self.add_common_sit_modbus_registers(1)
+		self.add_cc_only_sit_modbus_registers(2)
 
 		self.invariants()
 
@@ -167,7 +166,7 @@ class ClusterController(SitModbusDevice):
 		Registers particular to cluster controller
 		"""
 		assert self.valid_slave_address(a_slave_address), 'invalid a_slave_address:{}'.format(a_slave_address)
-		assert a_slave_address > 2, 'for this part slave_address should be >2 and is:{}'.format(a_slave_address)
+		assert a_slave_address > 2, 'add_cc_only_sit_modbus_registers->for this part slave_address should be >2 and is:{}'.format(a_slave_address)
 		
 		l_reg_list = OrderedDict()
 		l_slave_address = a_slave_address
