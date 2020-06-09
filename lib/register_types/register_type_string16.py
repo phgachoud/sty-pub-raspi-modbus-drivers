@@ -98,6 +98,7 @@ class RegisterTypeString16(SitModbusRegister):
 		#self._logger.debug("register_values_string16->after decoder:%s" % l_result)
 
 		assert isinstance(l_result, str), 'result is no str but' + l_result.__class.__name__
+		l_result.replace ('\0x0', '')
 
 		#self._logger.debug("set_value_with_raw->after decoder:{}".format(l_v))
 		self._value = l_result
