@@ -90,14 +90,14 @@ class RegisterTypeString16(SitModbusRegister):
 		decoder = BinaryPayloadDecoder.fromRegisters(a_register_read_res.registers, byteorder=self._byte_order, wordorder=self._word_order) #https://pymodbus.readthedocs.io/en/latest/source/example/modbus_payload.html
 		#https://pymodbus.readthedocs.io/en/v1.3.2/library/payload.html?highlight=binarypayloaddecoder#pymodbus.payload.BinaryPayloadDecoder
 		l_result = decoder.decode_string(16) 
-		self._logger.debug("register_values_string16->before decode utf=8:'{}'".format(l_result))
+		#self._logger.debug("register_values_string16->before decode utf=8:'{}'".format(l_result))
 		if len (l_result) > 0 and str(l_result[0]) == '0':
 			l_result = ''
 		else:
 			l_result = l_result.decode('utf-8', errors='replace')
-		self._logger.debug("register_values_string16->after decoder:'%s' last:'{}'".format(l_result, '{0:02x}'.format(ord(l_result[-1]))))
+		#self._logger.debug("register_values_string16->after decoder:'%s' last:'{}'".format(l_result, '{0:02x}'.format(ord(l_result[-1]))))
 		l_result = l_result.replace ('\x00', '')
-		self._logger.debug("register_values_string16->after replace:'%s'" % l_result)
+		#self._logger.debug("register_values_string16->after replace:'%s'" % l_result)
 
 		assert isinstance(l_result, str), 'result is no str but' + l_result.__class.__name__
 

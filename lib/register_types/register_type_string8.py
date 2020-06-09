@@ -96,6 +96,7 @@ class RegisterTypeString8(SitModbusRegister):
 		else:
 			l_result = l_result.decode('utf-8', errors='replace')
 		#self._logger.debug("register_values_string16->after decoder:%s" % l_result)
+		l_result = l_result.replace ('\x00', '')
 
 		assert isinstance(l_result, str), 'result is no str but' + l_result.__class.__name__
 
