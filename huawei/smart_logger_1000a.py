@@ -144,8 +144,9 @@ class SmartLogger1000a(SitModbusDevice):
 
 		l_reg_list = OrderedDict()
 		l_slave_address = a_slave_address
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('W', 'Total active output power of all inverters', 40525, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'kW', an_is_metadata=False))
 
-		SitUtils.od_extend(l_reg_list, RegisterTypeStrVar('Mn', 'Model', 30000, 15, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'String15', an_is_metadata=True))
+		#SitUtils.od_extend(l_reg_list, RegisterTypeStrVar('Mn', 'Model', 30000, 15, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'String15', an_is_metadata=True))
 
 		# CLUSTER AND INVERTERS
 #		SitUtils.od_extend(l_reg_list, RegisterTypeInt32u('Vr', 'Version number of the SMA Modbus profile', 30001, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Int32u', an_is_metadata=True))
