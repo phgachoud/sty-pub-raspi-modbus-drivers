@@ -59,7 +59,7 @@ respectivly
 ### Cluster controller and inverters (sma energy meter) attached to it
 respectivly
   * /sma/cluster_controller.py
-  * /sma/cluster_controller_inverter.py
+  * /sma/cluster_controller_inverter.py note that the inverters have to be configured each one with its slave_address. Most reliable way is to edit the plant xml file
 ## Schneider PM 5500 series (tested on 5560)
   * /sma/schneider_pm5500.py
 
