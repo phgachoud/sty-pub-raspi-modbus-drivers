@@ -346,7 +346,7 @@ class Janitza_UMG604:
 			l_result['I2'] = '{:.3f}'.format(self.register_values_float_32(19014)) #Current l2
 			l_result['I3'] = '{:.3f}'.format(self.register_values_float_32(19016)) #Current l3
 			l_result['In'] = '{:.2f}'.format(self.register_values_float_32(19018)) #Neutral current
-			l_result['P'] = '{:.4f}'.format(self.register_values_float_32(19026)/1000) #Active power W 
+			l_result['P'] = '{:.4f}'.format(self.register_values_float_32(19026)) #Active power kW 
 			l_result['Q'] = '{:.2f}'.format(self.register_values_float_32(19034)/1000) #Reactive power VAR
 			l_result['S'] = '{:.2f}'.format(self.register_values_float_32(19042)/1000) #Apparent power VAR
 #			l_result['PF'] = '{:.3f}'.format(self.register_values_float_32_pf()) #Power factor total
