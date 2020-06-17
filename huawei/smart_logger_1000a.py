@@ -131,6 +131,7 @@ class SmartLogger1000a(SitModbusDevice):
 		"""
 		assert self.valid_slave_address(a_slave_address), 'invalid a_slave_address:{}'.format(a_slave_address)
 		self.add_common_sit_modbus_registers(1)
+		self.add_inverter_modbus_registers(1, 1)
 
 		self.invariants()
 
@@ -147,9 +148,17 @@ class SmartLogger1000a(SitModbusDevice):
 		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s(SitConstants.SS_REG_SHORT_ABB_AC_POWER, 'Total active output power of all inverters', 40525, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'W', an_is_metadata=False))
 		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s(SitConstants.SS_REG_SHORT_ABB_AC_S_REACTIVE_POWER, 'Reactive power', 40544, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'kVar', an_is_metadata=False))
 
+		# Active power control
 		SitUtils.od_extend(l_reg_list, RegisterTypeInt16u(SitConstants.SS_REG_SHORT_EXTRA_HUAWEI_PLANT_STATUS, 'Plant Status 1=Unlimited/2Limited/3Idle/4Fault/5Communication_interrupt', 40543, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Enum', an_is_metadata=False))
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt16u('PlantSt2', 'Plant Status 2 0=ildle/1=on-grid/...', 40566, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Enum', an_is_metadata=False))
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt16u('ActPwrCtlMode', 'Active power control mode 0=no limit/other...', 40737, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Enum', an_is_metadata=False))
+		#Meter
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('WMeter', 'Active power of meter', 32278, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'W', an_is_metadata=False))
+
+		#Huawei specials
 		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s(SitConstants.SS_REG_SHORT_EXTRA_HUAWEI_ACT_POWER_ADJ, 'Active Power adjustment', 40426, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Int', an_is_metadata=False))
 		SitUtils.od_extend(l_reg_list, RegisterTypeInt16u(SitConstants.SS_REG_SHORT_EXTRA_HUAWEI_ACT_POWER_ADJ_PCT, 'Active Power adjustment percentage', 40428, l_slave_address, SitModbusRegister.ACCESS_MODE_R, '%', an_is_metadata=False))
+
 
 		#SitUtils.od_extend(l_reg_list, RegisterTypeStrVar('Mn', 'Model', 30000, 15, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'String15', an_is_metadata=True))
 
@@ -167,6 +176,22 @@ class SmartLogger1000a(SitModbusDevice):
 #		SitUtils.od_extend(l_reg_list, RegisterTypeInt64u('TotWhDay', 'Energy fed in on current day across all line conductors, in Wh (accumulated values of the inverters)', 30517, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Wh', an_is_metadata=False))
 #
 		self.append_modbus_registers(l_reg_list)
+
+	def add_inverter_modbus_registers(self, a_slave_address, an_inverter_index):
+		"""
+			INVERTERS see p.20 of documentation
+		"""
+		assert an_inverter_index >= 1, 'inverter index >= 1: {}'.format(an_inverter_index)
+		l_initial_register_address = 51000
+		l_base_address = l_initial_register_address = (25 * (an_inverter_index - 1))
+
+
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('Inverter_{}_W'.format(an_inverter_index), 'Active power for inverter nr: {}'.format(an_inverter_index), l_base_address, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'W', an_is_metadata=False))
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt16u('Inverter_{}_Status'.format(an_inverter_index), 'Status for inverter nr: {}'.format(an_inverter_index), l_base_address + 9, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'deg celcius', an_is_metadata=False))
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt16s('Inverter_{}_TmpCab'.format(an_inverter_index), 'Cabinet temperatore for inverter nr: {}'.format(an_inverter_index), l_base_address + 11, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'deg celcius', an_is_metadata=False))
+
+		self.append_modbus_registers(l_reg_list)
+
 
 	def kW_to_W(self, a_sit_modbus_register):
 		"""
