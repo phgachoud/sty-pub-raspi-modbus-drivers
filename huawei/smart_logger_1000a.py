@@ -144,7 +144,7 @@ class SmartLogger1000a(SitModbusDevice):
 
 		l_reg_list = OrderedDict()
 		l_slave_address = a_slave_address
-		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('W', 'Total active output power of all inverters', 40525, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'kW', an_is_metadata=False, a_post_set_value_call=self.kW_to_W))
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('W', 'Total active output power of all inverters', 40525, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'W', an_is_metadata=False, a_post_set_value_call=self.kW_to_W))
 
 		#SitUtils.od_extend(l_reg_list, RegisterTypeStrVar('Mn', 'Model', 30000, 15, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'String15', an_is_metadata=True))
 
@@ -166,7 +166,8 @@ class SmartLogger1000a(SitModbusDevice):
 	def kW_to_W(self, a_sit_modbus_register):
 		"""
 		"""
-		l_new_val = a_sit_modbus_register.value * 1000
+		#l_new_val = a_sit_modbus_register.value * 1000
+		l_new_val = a_sit_modbus_register.value
 		self._logger.debug('kW_to_W->Setting new value-> old:{} new:{}'.format(a_sit_modbus_register.value, l_new_val))
 		a_sit_modbus_register.value = l_new_val
 
