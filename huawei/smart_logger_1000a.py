@@ -189,6 +189,7 @@ class SmartLogger1000a(SitModbusDevice):
 		l_slave_address = a_slave_address
 
 		self._logger.debug('add_inverter_modbus_registers-> Base address: {}'.format(l_base_address))
+
 		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('Inverter_{}_W'.format(an_inverter_index), 'Active power for inverter nr: {}'.format(an_inverter_index), l_base_address, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'W', an_is_metadata=False))
 		SitUtils.od_extend(l_reg_list, RegisterTypeInt16u('Inverter_{}_Status'.format(an_inverter_index), 'Status for inverter nr: {}'.format(an_inverter_index), l_base_address + 9, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'deg celcius', an_is_metadata=False))
 		SitUtils.od_extend(l_reg_list, RegisterTypeInt16s('Inverter_{}_TmpCab'.format(an_inverter_index), 'Cabinet temperatore for inverter nr: {}'.format(an_inverter_index), l_base_address + 11, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'deg celcius', an_is_metadata=False))
