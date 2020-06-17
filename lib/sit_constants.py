@@ -58,24 +58,42 @@ class SitConstants(object):
 	# Sunspec registers short abbreviations see sunspec into wiki links to github repo to find them
 
 #	SS_REG_SHORT_ABB_ = "" #
-	SS_REG_SHORT_ABB_ACTIVE_POWER = "W" # Active power in W
 	SS_REG_SHORT_ABB_MANUFACTURER = "Mn" # Manufacturer
-#	SS_REG_SHORT_ABB_MODEL = "Md" # Model
-#	SS_REG_SHORT_ABB_OPTIONS = "Opt" # Options
-#	SS_REG_SHORT_ABB_VERSION = "Vr" # Version
-#	SS_REG_SHORT_ABB_SERIAL_NUMBER = "SN" # Serial number
-#	SS_REG_SHORT_ABB_MODBUS_DEVICE_ADDRESS = "DA" # Modbus device address
-#	SS_REG_SHORT_ABB_PARITY_EVEN = "Pad" # Parity even forced
+	SS_REG_SHORT_ABB_MODEL = "Md" # Model
+	SS_REG_SHORT_ABB_OPTIONS = "Opt" # Options
+	SS_REG_SHORT_ABB_VERSION = "Vr" # Version
+	SS_REG_SHORT_ABB_SERIAL_NUMBER = "SN" # Serial number
+	SS_REG_SHORT_ABB_MODBUS_DEVICE_ADDRESS = "DA" # Modbus device address
+	SS_REG_SHORT_ABB_PARITY_EVEN = "Pad" # Parity even forced
+	#INVERTER
+	SS_REG_SHORT_ABB_AC_CURRENT = "A" # AC Current
+	SS_REG_SHORT_ABB_AC_PHASE_A = "AphA" # Amps Phase A
+	SS_REG_SHORT_ABB_AC_PHASE_B = "AphB" # Amps Phase B
+	SS_REG_SHORT_ABB_AC_PHASE_C = "AphC" # Amps Phase C
+	SS_REG_SHORT_ABB_V_PP_AB = "PPVphAB" # Phase to phase Voltage AB
+	SS_REG_SHORT_ABB_V_PP_BC = "PPVphBC" # Phase to phase Voltage BC
+	SS_REG_SHORT_ABB_V_PP_CA = "PPVphCA" # Phase to phase Voltage CA
+	SS_REG_SHORT_ABB_V_PN_A = "PhVphA" # Phase Voltage AN
+	SS_REG_SHORT_ABB_V_PN_B = "PhVphB" # Phase Voltage BN
+	SS_REG_SHORT_ABB_V_PN_C = "PhVphC" # Phase Voltage CN
+	SS_REG_SHORT_ABB_AC_POWER = "W" # AC Power Watts Active power in Watts
+	SS_REG_SHORT_ABB_HZ = "Hz" # Line Frequency
+	SS_REG_SHORT_ABB_AC_Q_APPARENT_POWER = "VA" # Apparent Power
+	SS_REG_SHORT_ABB_AC_S_REACTIVE_POWER = "VAr" # Reactive Power
+	SS_REG_SHORT_ABB_DC_AMPS = "DCA" # DC Current in Amps
+	SS_REG_SHORT_ABB_DC_VOLTAGE = "DCV" # DC Voltage
+	SS_REG_SHORT_ABB_DC_POWER = "DCW" # DC Power in Watts
+	SS_REG_SHORT_ABB_TEMP_CAB = "TmpCab" # Cabinet Temperature
+
 #	SS_REG_SHORT_ABB_ = "" #
 #	SS_REG_SHORT_ABB_ = "" #
 #	SS_REG_SHORT_ABB_ = "" #
-#	SS_REG_SHORT_ABB_ = "" #
-#	SS_REG_SHORT_ABB_ = "" #
-#	SS_REG_SHORT_ABB_ = "" #
-#	SS_REG_SHORT_ABB_ = "" #
-#	SS_REG_SHORT_ABB_ = "" #
-#	SS_REG_SHORT_ABB_ = "" #
-#	SS_REG_SHORT_ABB_ = "" #
-#	SS_REG_SHORT_ABB_ = "" #
-#	SS_REG_SHORT_ABB_ = "" #
-#	SS_REG_SHORT_ABB_ = "" #
+
+
+
+	SS_REG_SHORT_EXTRA_HUAWEI_PLANT_STATUS = 'PlantSt' # Plant Status 1 unlimited power / 2 limited power 3 = ildle / 4 = Outage fault, maintenance /5 = communication interrupt
+	SS_REG_SHORT_EXTRA_HUAWEI_ACT_POWER_ADJ = 'ActPAdj' # Active Adjustment
+	SS_REG_SHORT_EXTRA_HUAWEI_ACT_POWER_ADJ_PCT = 'ActPAdjPct' # Active Adjustment percentage
+
+
+
