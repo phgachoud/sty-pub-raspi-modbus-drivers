@@ -144,12 +144,12 @@ class SmartLogger1000a(SitModbusDevice):
 
 		l_reg_list = OrderedDict()
 		l_slave_address = a_slave_address
-		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s(SS_REG_SHORT_ABB_AC_POWER, 'Total active output power of all inverters', 40525, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'W', an_is_metadata=False))
-		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s(SS_REG_SHORT_ABB_AC_S_REACTIVE_POWER, 'Reactive power', 40544, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'kVar', an_is_metadata=False))
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s(SitConstants.SS_REG_SHORT_ABB_AC_POWER, 'Total active output power of all inverters', 40525, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'W', an_is_metadata=False))
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s(SitConstants.SS_REG_SHORT_ABB_AC_S_REACTIVE_POWER, 'Reactive power', 40544, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'kVar', an_is_metadata=False))
 
-		SitUtils.od_extend(l_reg_list, RegisterTypeInt16u(SS_REG_SHORT_EXTRA_HUAWEI_PLANT_STATUS, 'Plant Status 1=Unlimited/2Limited/3Idle/4Fault/5Communication_interrupt', 40543, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Enum', an_is_metadata=False))
-		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s(SS_REG_SHORT_EXTRA_HUAWEI_ACT_POWER_ADJ, 'Active Power adjustment', 40426, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Int', an_is_metadata=False))
-		SitUtils.od_extend(l_reg_list, RegisterTypeInt16u(SS_REG_SHORT_EXTRA_HUAWEI_ACT_POWER_ADJ_PCT, 'Active Power adjustment percentage', 40428, l_slave_address, SitModbusRegister.ACCESS_MODE_R, '%', an_is_metadata=False))
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt16u(SitConstants.SS_REG_SHORT_EXTRA_HUAWEI_PLANT_STATUS, 'Plant Status 1=Unlimited/2Limited/3Idle/4Fault/5Communication_interrupt', 40543, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Enum', an_is_metadata=False))
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s(SitConstants.SS_REG_SHORT_EXTRA_HUAWEI_ACT_POWER_ADJ, 'Active Power adjustment', 40426, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Int', an_is_metadata=False))
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt16u(SitConstants.SS_REG_SHORT_EXTRA_HUAWEI_ACT_POWER_ADJ_PCT, 'Active Power adjustment percentage', 40428, l_slave_address, SitModbusRegister.ACCESS_MODE_R, '%', an_is_metadata=False))
 
 		#SitUtils.od_extend(l_reg_list, RegisterTypeStrVar('Mn', 'Model', 30000, 15, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'String15', an_is_metadata=True))
 
