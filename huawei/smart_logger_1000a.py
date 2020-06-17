@@ -153,7 +153,7 @@ class SmartLogger1000a(SitModbusDevice):
 		SitUtils.od_extend(l_reg_list, RegisterTypeInt16u('PlantSt2', 'Plant Status 2 0=ildle/1=on-grid/...', 40566, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Enum', an_is_metadata=False))
 		SitUtils.od_extend(l_reg_list, RegisterTypeInt16u('ActPwrCtlMode', 'Active power control mode 0=no limit/other...', 40737, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Enum', an_is_metadata=False))
 		#Meter
-		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('WMeter', 'Active power of meter', 32278, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'W', an_is_metadata=False))
+		# UNABLE TO READ IT SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('WMeter', 'Active power of meter', 32278, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'W', an_is_metadata=False))
 
 		#Huawei specials
 		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s(SitConstants.SS_REG_SHORT_EXTRA_HUAWEI_ACT_POWER_ADJ, 'Active Power adjustment', 40426, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Int', an_is_metadata=False))
