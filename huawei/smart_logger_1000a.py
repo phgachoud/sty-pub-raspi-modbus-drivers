@@ -183,7 +183,7 @@ class SmartLogger1000a(SitModbusDevice):
 		"""
 		assert an_inverter_index >= 1, 'inverter index >= 1: {}'.format(an_inverter_index)
 		l_initial_register_address = 51000
-		l_base_address = l_initial_register_address = (25 * (an_inverter_index - 1))
+		l_base_address = l_initial_register_address + (25 * (an_inverter_index - 1))
 
 		l_reg_list = OrderedDict()
 		l_slave_address = a_slave_address
