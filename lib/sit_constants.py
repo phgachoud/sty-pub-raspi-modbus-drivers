@@ -54,3 +54,28 @@ class SitConstants(object):
 									\n type '--help'.  This is free software under LGPL_v2 LICENSE, 
 									\n and you are welcome to redistribute it under certain conditions; 
 									\n type '--help' for details."""
+
+	# Sunspec registers short abbreviations see sunspec into wiki links to github repo to find them
+
+#	SS_REG_SHORT_ABB_ = "" #
+	SS_REG_SHORT_ABB_ACTIVE_POWER = "W" # Active power in W
+	SS_REG_SHORT_ABB_MANUFACTURER = "Mn" # Manufacturer
+#	SS_REG_SHORT_ABB_MODEL = "Md" # Model
+#	SS_REG_SHORT_ABB_OPTIONS = "Opt" # Options
+#	SS_REG_SHORT_ABB_VERSION = "Vr" # Version
+#	SS_REG_SHORT_ABB_SERIAL_NUMBER = "SN" # Serial number
+#	SS_REG_SHORT_ABB_MODBUS_DEVICE_ADDRESS = "DA" # Modbus device address
+#	SS_REG_SHORT_ABB_PARITY_EVEN = "Pad" # Parity even forced
+#	SS_REG_SHORT_ABB_ = "" #
+#	SS_REG_SHORT_ABB_ = "" #
+#	SS_REG_SHORT_ABB_ = "" #
+#	SS_REG_SHORT_ABB_ = "" #
+#	SS_REG_SHORT_ABB_ = "" #
+#	SS_REG_SHORT_ABB_ = "" #
+#	SS_REG_SHORT_ABB_ = "" #
+#	SS_REG_SHORT_ABB_ = "" #
+#	SS_REG_SHORT_ABB_ = "" #
+#	SS_REG_SHORT_ABB_ = "" #
+#	SS_REG_SHORT_ABB_ = "" #
+#	SS_REG_SHORT_ABB_ = "" #
+#	SS_REG_SHORT_ABB_ = "" #
