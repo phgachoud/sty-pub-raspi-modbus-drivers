@@ -66,4 +66,7 @@ respectivly
 ## Legrand comunication module 145671 which is for meter model 14668
   * /sma/legrand_145671.py
 
+## Huawei Smart Logger 1000a (or SmartLogger 1000a) driver and inverter for SUN2000 series
+  * /huawei/smart_logger_1000a.py
+  * /huawei/smart_logger_1000a_inverter.py
 
