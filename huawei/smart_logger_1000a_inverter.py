@@ -80,7 +80,7 @@ except ImportError as l_err:
 	print(sys.path)
 	raise l_err
 
-class SmartLogger1000a(SitModbusDevice):
+class SmartLogger1000aInverter(SitModbusDevice):
 
 # CONSTANTS
 
@@ -303,7 +303,6 @@ class SmartLogger1000a(SitModbusDevice):
 
 	def invariants(self):
 		self.invariants_modbus_device()
-		self.valid_inverter_index(self._inverter_index)
 
 """
 Main method
@@ -313,7 +312,7 @@ def main():
 	logger = logging.getLogger(__name__)
 
 	try:
-		l_obj = SmartLogger1000a()
+		l_obj = SmartLogger1000aInverter()
 		l_obj.execute_corresponding_args()
 #		l_id.test()
 		pass
