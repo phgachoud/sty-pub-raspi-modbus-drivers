@@ -233,7 +233,7 @@ class SmartLogger1000a(SitModbusDevice):
 				assert self.valid_slave_address(self._slave_address), 'Invalid slave address {}'.format(self._slave_address)
 				for l_inverter_index in self._inverter_indexes_list:
 					assert self.valid_inverter_index(l_inverter_index), 'execute_corresponding_args->valid inverter index:{}'.format(l_inverter_index)
-					self._init_sit_modbus_registers(l_slave_address, l_inverter_index)
+					self._init_sit_modbus_registers(self._slave_address, l_inverter_index)
 					self.read_all_sit_modbus_registers()
 					if self._args.store_values:
 						self.store_values_into_csv(self._sit_modbus_registers, self._slave_address)
