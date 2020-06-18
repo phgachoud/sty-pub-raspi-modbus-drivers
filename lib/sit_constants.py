@@ -84,8 +84,8 @@ class SitConstants(object):
 	SS_REG_SHORT_ABB_DC_VOLTAGE = "DCV" # DC Voltage
 	SS_REG_SHORT_ABB_DC_POWER = "DCW" # DC Power in Watts
 	SS_REG_SHORT_ABB_TEMP_CAB = "TmpCab" # Cabinet Temperature
+	SS_REG_SHORT_ABB_STATUS_OPERATING_STATE = "St" #
 
-#	SS_REG_SHORT_ABB_ = "" #
 #	SS_REG_SHORT_ABB_ = "" #
 #	SS_REG_SHORT_ABB_ = "" #
 
