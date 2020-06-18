@@ -70,6 +70,7 @@ try:
 	from register_type_int32_u import RegisterTypeInt32u
 	from register_type_int32_s import RegisterTypeInt32s
 	from register_type_int64_u import RegisterTypeInt64u
+	from register_type_string_var import RegisterTypeStringVar
 	from register_type_sma_cc_device_class import RegisterTypeSmaCCDeviceClass
 	from sit_date_time import SitDateTime
 	from sit_json_conf import SitJsonConf
@@ -144,6 +145,7 @@ class SmartLogger1000a(SitModbusDevice):
 
 		l_reg_list = OrderedDict()
 		l_slave_address = a_slave_address
+		SitUtils.od_extend(l_reg_list, RegisterTypeStringVar(SitConstants.SS_REG_SHORT_ABB_SERIAL_NUMBER, 'ESN', 40713, 10, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'W', an_is_metadata=True))
 		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s(SitConstants.SS_REG_SHORT_ABB_AC_POWER, 'Total active output power of all inverters', 40525, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'W', an_is_metadata=False, an_event=SitModbusRegisterEvent(self._W_event)))
 		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s(SitConstants.SS_REG_SHORT_ABB_AC_S_REACTIVE_POWER, 'Reactive power', 40544, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'kVar', an_is_metadata=False))
 
