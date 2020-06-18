@@ -96,7 +96,6 @@ class SmartLogger1000a(SitModbusDevice):
 	_word_order = Endian.Big
 	_substract_one_to_register_index = False
 
-	_inverter_index = 1
 	_inverter_indexes_list = None
 
 # FUNCTIONS DEFINITION 
@@ -115,7 +114,6 @@ class SmartLogger1000a(SitModbusDevice):
 					l_slave_address = self._args.slave_address
 			super().__init__(l_slave_address, self.DEFAULT_TARGET_MODE, a_port=self.DEFAULT_MODBUS_PORT, an_ip_address=self._args.host_ip) 
 			self._inverter_indexes_list = SitUtils.args_to_list(self._args.inverter_index)
-			assert self.valid_inverter_index(self._inverter_index), 'Given inverter index is not valid: {}'
 			self._logger = SitLogger().new_logger(self.__class__.__name__, self._args.host_mac)
 
 			self.invariants()
@@ -134,7 +132,7 @@ class SmartLogger1000a(SitModbusDevice):
 			Initializes self._sit_modbus_registers
 		"""
 		assert self.valid_slave_address(a_slave_address), 'invalid a_slave_address:{}'.format(a_slave_address)
-		assert self.valid_inverter_index (self.inverter_index), 'valid inverter index:{}'.format(self._inverter_index)
+		assert self.valid_inverter_index (an_inverter_index), 'valid inverter index:{}'.format(an_inverter_index)
 		self.add_inverter_modbus_registers(1, an_inverter_index)
 
 		self.invariants()
