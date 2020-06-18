@@ -8,7 +8,7 @@
 #			Logging into /var/log/solarity/file_name.log
 #
 #       CALL SAMPLE:
-	#		/data/solarity/sit-raspi/sty-pub-raspi-modbus-drivers/huawei/smart_logger_1000a.py --host_ip '192.168.0.74' --host_mac '00:90:E8:73:0A:D6' --store_values --raise_event
+#			/data/solarity/sit-raspi/sty-pub-raspi-modbus-drivers/huawei/smart_logger_1000a_inverter.py --host_ip '192.168.0.74' --host_mac '00:90:E8:73:0A:D6' --store_values --raise_event
 #	
 #	REQUIRE
 #		**** PYTHON *****
@@ -96,6 +96,9 @@ class SmartLogger1000a(SitModbusDevice):
 	_word_order = Endian.Big
 	_substract_one_to_register_index = False
 
+	_inverter_index = 1
+	_inverter_indexes_list = None
+
 # FUNCTIONS DEFINITION 
 
 	"""
@@ -111,8 +114,9 @@ class SmartLogger1000a(SitModbusDevice):
 				if (hasattr(self._args, 'slave_address') and self._args.slave_address):
 					l_slave_address = self._args.slave_address
 			super().__init__(l_slave_address, self.DEFAULT_TARGET_MODE, a_port=self.DEFAULT_MODBUS_PORT, an_ip_address=self._args.host_ip) 
+			self._inverter_indexes_list = SitUtils.args_to_list(self._args.inverter_index)
+			assert self.valid_inverter_index(self._inverter_index), 'Given inverter index is not valid: {}'
 			self._logger = SitLogger().new_logger(self.__class__.__name__, self._args.host_mac)
-			self._init_sit_modbus_registers(l_slave_address)
 
 			self.invariants()
 			#self._logger.debug('init->' + self.out())
@@ -125,57 +129,15 @@ class SmartLogger1000a(SitModbusDevice):
 			raise l_e
 			#exit(1)
 
-	def _init_sit_modbus_registers(self, a_slave_address):
+	def _init_sit_modbus_registers(self, a_slave_address, an_inverter_index):
 		"""
 			Initializes self._sit_modbus_registers
 		"""
 		assert self.valid_slave_address(a_slave_address), 'invalid a_slave_address:{}'.format(a_slave_address)
-		self.add_common_sit_modbus_registers(1)
-		self.add_inverter_modbus_registers(1, 1)
+		assert self.valid_inverter_index (self.inverter_index), 'valid inverter index:{}'.format(self._inverter_index)
+		self.add_inverter_modbus_registers(1, an_inverter_index)
 
 		self.invariants()
-
-
-	def add_common_sit_modbus_registers(self, a_slave_address):
-		"""
-		Common devices registers
-		"""
-		assert self.valid_slave_address(a_slave_address), 'invalid a_slave_address:{}'.format(a_slave_address)
-		assert a_slave_address == 1 or a_slave_address >= 3, 'Dont ask for slave_address 2, the add_cc_only_sit_modbus_registers is done for that! addr:{}'.format(a_slave_address)
-
-		l_reg_list = OrderedDict()
-		l_slave_address = a_slave_address
-		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s(SitConstants.SS_REG_SHORT_ABB_AC_POWER, 'Total active output power of all inverters', 40525, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'W', an_is_metadata=False))
-		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s(SitConstants.SS_REG_SHORT_ABB_AC_S_REACTIVE_POWER, 'Reactive power', 40544, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'kVar', an_is_metadata=False))
-
-		# Active power control
-		SitUtils.od_extend(l_reg_list, RegisterTypeInt16u(SitConstants.SS_REG_SHORT_EXTRA_HUAWEI_PLANT_STATUS, 'Plant Status 1=Unlimited/2Limited/3Idle/4Fault/5Communication_interrupt', 40543, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Enum', an_is_metadata=False))
-		SitUtils.od_extend(l_reg_list, RegisterTypeInt16u('PlantSt2', 'Plant Status 2 0=ildle/1=on-grid/...', 40566, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Enum', an_is_metadata=False))
-		SitUtils.od_extend(l_reg_list, RegisterTypeInt16u('ActPwrCtlMode', 'Active power control mode 0=no limit/other...', 40737, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Enum', an_is_metadata=False))
-		#Meter
-		# UNABLE TO READ IT SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('WMeter', 'Active power of meter', 32278, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'W', an_is_metadata=False))
-
-		#Huawei specials
-		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s(SitConstants.SS_REG_SHORT_EXTRA_HUAWEI_ACT_POWER_ADJ, 'Active Power adjustment', 40426, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Int', an_is_metadata=False))
-		SitUtils.od_extend(l_reg_list, RegisterTypeInt16u(SitConstants.SS_REG_SHORT_EXTRA_HUAWEI_ACT_POWER_ADJ_PCT, 'Active Power adjustment percentage', 40428, l_slave_address, SitModbusRegister.ACCESS_MODE_R, '%', an_is_metadata=False))
-
-
-		#SitUtils.od_extend(l_reg_list, RegisterTypeStrVar('Mn', 'Model', 30000, 15, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'String15', an_is_metadata=True))
-
-		# CLUSTER AND INVERTERS
-#		SitUtils.od_extend(l_reg_list, RegisterTypeInt32u('Vr', 'Version number of the SMA Modbus profile', 30001, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Int32u', an_is_metadata=True))
-#		
-#		SitUtils.od_extend(l_reg_list, RegisterTypeInt32u('ID', 'SUSy ID (of the Cluster Controller)', 30003, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Int32u', an_is_metadata=True))
-#		SitUtils.od_extend(l_reg_list, RegisterTypeInt32u('SN', 'Serial number (of the Cluster Controller)', 30005, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Int32u', an_is_metadata=True))
-#		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('NewData', 'Modbus data change: meter value is increased by the Cluster Controller if new data is available.', 30007, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Int32u', an_is_metadata=False))
-#		SitUtils.od_extend(l_reg_list, RegisterTypeSmaCCDeviceClass('DeviceClass', 'Device Class', 30051, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Enum', an_is_metadata=True))
-#
-#		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('W', 'Current active power on all line conductors (W), accumulated values of the inverters', 30775, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'W', an_is_metadata=False, an_event=SitModbusRegisterEvent(self._W_event)))
-#		SitUtils.od_extend(l_reg_list, RegisterTypeInt64u('Wh', 'Total energy fed in across all line conductors, in Wh (accumulated values of the inverters) System param', 30513, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Wh', an_is_metadata=False))
-#		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('VAr', 'Reactive power on all line conductors (var), accumulated values of the inverters', 30805, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'VAr', an_is_metadata=False))
-#		SitUtils.od_extend(l_reg_list, RegisterTypeInt64u('TotWhDay', 'Energy fed in on current day across all line conductors, in Wh (accumulated values of the inverters)', 30517, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Wh', an_is_metadata=False))
-#
-		self.append_modbus_registers(l_reg_list)
 
 	def add_inverter_modbus_registers(self, a_slave_address, an_inverter_index):
 		"""
@@ -195,15 +157,6 @@ class SmartLogger1000a(SitModbusDevice):
 		SitUtils.od_extend(l_reg_list, RegisterTypeInt16s('Inverter_{}_TmpCab'.format(an_inverter_index), 'Cabinet temperatore for inverter nr: {}'.format(an_inverter_index), l_base_address + 11, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'deg celcius', an_is_metadata=False))
 
 		self.append_modbus_registers(l_reg_list)
-
-
-	def kW_to_W(self, a_sit_modbus_register):
-		"""
-		"""
-		#l_new_val = a_sit_modbus_register.value * 1000
-		l_new_val = a_sit_modbus_register.value
-		self._logger.debug('kW_to_W->Setting new value-> old:{} new:{}'.format(a_sit_modbus_register.value, l_new_val))
-		a_sit_modbus_register.value = l_new_val
 
 
 	def _W_event(self, a_sit_modbus_register):
@@ -257,63 +210,6 @@ class SmartLogger1000a(SitModbusDevice):
 	def _setted_parts(self, a_subject, a_body):
 		return a_subject, a_body
 
-	def manual_restart(self):
-		"""
-		Manual restart 
-		documented on p.45 of doc
-		"""
-		l_res = 'test_res'
-		self._logger.info('manual_restart-> NOW')
-		#a_register_index, a_slave_address, a_value):
-		l_res = self.write_register_value(0, 201, 1)
-		self._logger.info('manual_restart-> result:{}'.format(l_res))
-
-		return l_res
-
-	def read_all_sit_modbus_registers(self): 
-		"""
-		Read inverters data
-		"""
-		super().read_all_sit_modbus_registers()
-
-#		l_reg_index = 42109
-#		l_slave_address = 3
-#		self.read_inverter_data(l_slave_address)
-	
-	def read_inverter_data(self, a_slave_address):
-		"""
-		Was for test but not working
-		"""
-		assert False, 'deprecated'
-		l_reg = RegisterTypeInt64u('Wh2', 'Total energy fed in across all line conductors, in Wh (accumulated values of the inverters) System param', 30513, SitModbusRegister.ACCESS_MODE_R, 'Wh', an_is_metadata=False, a_slave_address=a_slave_address)
-		self.read_inverter_data_register(l_reg, a_slave_address)
-		print (l_reg.out_human_readable(a_with_description=True))
-
-#		l_reg = RegisterTypeInt32u('SN', 'Serial Number', a_reg_index + 1, SitModbusRegister.ACCESS_MODE_R, 'Int32u', an_is_metadata=True)
-#		self.read_inverter_data_register(l_reg, a_slave_address)
-#
-#		l_reg = RegisterTypeInt16u('UnitID', 'Unit ID', a_reg_index + 3, SitModbusRegister.ACCESS_MODE_R, 'Int32u', an_is_metadata=True)
-#		self.read_inverter_data_register(l_reg, a_slave_address)
-
-
-	def read_inverter_data_register(self, a_register, a_slave_address):
-		"""
-		Reads given inverter data
-		Was for test but not working
-		"""
-		assert False, 'deprecated'
-		try:
-			self.read_sit_modbus_register(a_register, a_slave_address)
-			if self._args.store_values:
-				pass
-	#			self.store_values_into_csv([l_reg], l_slave)
-			if self._args.display_all:
-				print('***************** INVERTER slave:{} ******************'.format(a_slave_address))
-				print(a_register.out_human_readable(a_with_description=self._args.long))
-		except ModbusException as l_e:
-			self._logger.error('read_inverter_data-> error reading register {}'.format(l_e))
-		except Exception as l_e:
-			raise l_e
 
 # ACCESS
 
@@ -335,16 +231,19 @@ class SmartLogger1000a(SitModbusDevice):
 				self._logger.setLevel(logging.INFO)
 			if self._args.store_values or self._args.display_all or self._args.test or self._args.raise_event:
 				assert self.valid_slave_address(self._slave_address), 'Invalid slave address {}'.format(self._slave_address)
-				self.read_all_sit_modbus_registers()
-				if self._args.store_values:
-					self.store_values_into_csv(self._sit_modbus_registers, self._slave_address)
-				if self._args.display_all:
-					print(self.out_human_readable(a_with_description=self._args.long))
-				if self._args.raise_event:
-					assert len(self._sit_modbus_registers) > 0, 'modbus_registers_not_empty'
-					self.call_sit_modbus_registers_events()
-				if self._args.test:
-					self.test()
+				for l_inverter_index in self._inverter_indexes_list:
+					assert self.valid_inverter_index(l_inverter_index), 'execute_corresponding_args->valid inverter index:{}'.format(l_inverter_index)
+					self._init_sit_modbus_registers(l_slave_address, l_inverter_index)
+					self.read_all_sit_modbus_registers()
+					if self._args.store_values:
+						self.store_values_into_csv(self._sit_modbus_registers, self._slave_address)
+					if self._args.display_all:
+						print(self.out_human_readable(a_with_description=self._args.long))
+					if self._args.raise_event:
+						assert len(self._sit_modbus_registers) > 0, 'modbus_registers_not_empty'
+						self.call_sit_modbus_registers_events()
+					if self._args.test:
+						self.test()
 #			if self._args.manual_restart:
 #				self.manual_restart()
 		except Exception as l_e:
@@ -369,7 +268,9 @@ class SmartLogger1000a(SitModbusDevice):
 		self._parser.add_argument('-c', '--slave_address', help='Slave address of modbus device', nargs='?')
 
 	def add_required_named(self, a_required_named):
-		pass
+		"""
+		"""
+		a_required_named.add_argument('-x', '--inverter_index', help='Inverter index >= 1, can be 1-n or 1,2,5', nargs='?', required=True)
 
 	def test(self):
 		"""
@@ -396,11 +297,15 @@ class SmartLogger1000a(SitModbusDevice):
 		#return ['devices_events@solarityenergia.com']
 		#return ['philippe@solarityenergia.com', 'ph.gachoud@gmail.com']
 
+	def valid_inverter_index(self, an_inverter_index):
+		return an_inverter_index >= 1
+
 	def invariants_modbus_device(self):
 		super().invariants()
 
 	def invariants(self):
 		self.invariants_modbus_device()
+		self.valid_inverter_index(self._inverter_index)
 
 """
 Main method
