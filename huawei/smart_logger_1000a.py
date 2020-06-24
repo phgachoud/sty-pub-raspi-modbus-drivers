@@ -364,7 +364,7 @@ class SmartLogger1000a(SitModbusDevice):
 			raise l_e
 
 	def events_mail_receivers(self):
-		return ['devices_events@solarityenergia.com', 'operaciones@solarityenergia.com']
+		return ['devices_events@solarityenergia.com', 'carlos.soto@solarityenergia.com']
 		#return ['devices_events@solarityenergia.com']
 		#return ['philippe@solarityenergia.com', 'ph.gachoud@gmail.com']
 
