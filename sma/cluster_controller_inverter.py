@@ -85,7 +85,7 @@ class ClusterControllerInverter(ClusterController):
 # CONSTANTS
 
 	DEFAULT_SLAVE_ADDRESS = 3
-	MIN_W_FOR_RAISE_EVENT_GENERATION = 2000
+	MIN_W_FOR_RAISE_EVENT_GENERATION = 50
 	PARSER_DESCRIPTION = 'Actions with sma cluster controller inverter.  ' + SitConstants.DEFAULT_HELP_LICENSE_NOTICE
 
 # CLASS ATTRIBUTES
