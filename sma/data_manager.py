@@ -183,7 +183,7 @@ class DataManager(SitModbusDevice):
 
 		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('VArExport', 'Current utility grid export reactive power Q in VAr (actual value of the reactive power fed in at the grid- connection point; measured with an external measuring device).', 31251, l_slave_address, SitModbusRegister.ACCESS_MODE_R, '%', an_is_metadata=False)) 
 
-		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('AC_1', 'Analog current input 1 (mA)', 34637, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'mA', an_is_metadata=False, a_post_set_value_call=self.sma_fix2)) 
+		#SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('AC_1', 'Analog current input 1 (mA)', 34637, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'mA', an_is_metadata=False, a_post_set_value_call=self.sma_fix2)) 
 		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('AC_2', 'Analog current input 2 (mA)', 34639, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'mA', an_is_metadata=False, a_post_set_value_call=self.sma_fix2)) 
 		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('AC_3', 'Analog current input 3 (mA)', 34641, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'mA', an_is_metadata=False, a_post_set_value_call=self.sma_fix2)) 
 		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('AC_4', 'Analog current input 4 (mA)', 34643, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'mA', an_is_metadata=False, a_post_set_value_call=self.sma_fix2)) 
