@@ -131,7 +131,7 @@ class DataManager(SitModbusDevice):
 		"""
 		assert self.valid_slave_address(a_slave_address), 'invalid a_slave_address:{}'.format(a_slave_address)
 		self.add_common_sit_modbus_registers(1)
-		#self.add_cc_only_sit_modbus_registers(2)
+		self.add_dm_only_sit_modbus_registers(2)
 
 		self.invariants()
 
@@ -162,7 +162,7 @@ class DataManager(SitModbusDevice):
 
 		self.append_modbus_registers(l_reg_list)
 
-	def add_cc_only_sit_modbus_registers(self, a_slave_address):
+	def add_dm_only_sit_modbus_registers(self, a_slave_address):
 		"""
 		Registers particular to cluster controller
 		"""
@@ -171,34 +171,34 @@ class DataManager(SitModbusDevice):
 		
 		l_reg_list = OrderedDict()
 		l_slave_address = a_slave_address
-#
-#		#PARAMETERS UNIT_ID = 2 (p.26 of doc)
-#		SitUtils.od_extend(l_reg_list, RegisterTypeInt32u('WDigIo', 'Active power setpoint Digital I/O', 31235, l_slave_address, SitModbusRegister.ACCESS_MODE_R, '%', an_is_metadata=False, a_post_set_value_call=self.sma_fix2))
-#		SitUtils.od_extend(l_reg_list, RegisterTypeInt32u('WAnalog', 'Active power setpoint Analog', 31237, l_slave_address, SitModbusRegister.ACCESS_MODE_R, '%', an_is_metadata=False, a_post_set_value_call=self.sma_fix2))
-#		SitUtils.od_extend(l_reg_list, RegisterTypeInt32u('WSetPoint', 'Active power setpoint in %s', 31239, l_slave_address, SitModbusRegister.ACCESS_MODE_R, '%', an_is_metadata=False, a_post_set_value_call=self.sma_fix2))
-#		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('WSetPointDirMar', 'Active power setpoint in %s Specification Modbus Direct marketing', 31241, l_slave_address, SitModbusRegister.ACCESS_MODE_R, '%', an_is_metadata=False, a_post_set_value_call=self.sma_fix2)) 
-#		SitUtils.od_extend(l_reg_list, RegisterTypeInt32u('ResSetPoint', 'Resulting setpoint (minimum value definition of all specifications)', 31243, l_slave_address, SitModbusRegister.ACCESS_MODE_R, '%', an_is_metadata=False, a_post_set_value_call=self.sma_fix2)) 
-#		#Strange
-#		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('WExport', 'Current utility grid export active power P in W (actual value of the active power fed in at the grid-connection point; measured with an external measuring device).', 31249, l_slave_address, SitModbusRegister.ACCESS_MODE_R, '%', an_is_metadata=False)) 
-#
-#		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('VArExport', 'Current utility grid export reactive power Q in VAr (actual value of the reactive power fed in at the grid- connection point; measured with an external measuring device).', 31251, l_slave_address, SitModbusRegister.ACCESS_MODE_R, '%', an_is_metadata=False)) 
-#
-#		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('AC_1', 'Analog current input 1 (mA)', 34637, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'mA', an_is_metadata=False, a_post_set_value_call=self.sma_fix2)) 
-#		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('AC_2', 'Analog current input 2 (mA)', 34639, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'mA', an_is_metadata=False, a_post_set_value_call=self.sma_fix2)) 
-#		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('AC_3', 'Analog current input 3 (mA)', 34641, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'mA', an_is_metadata=False, a_post_set_value_call=self.sma_fix2)) 
-#		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('AC_4', 'Analog current input 4 (mA)', 34643, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'mA', an_is_metadata=False, a_post_set_value_call=self.sma_fix2)) 
-#
-#		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('InDCV_1', 'Analog voltage input 1 (V)', 34645, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'V', an_is_metadata=False, a_post_set_value_call=self.sma_fix2)) 
-#		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('InDCV_2', 'Analog voltage input 2 (V)', 34647, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'V', an_is_metadata=False, a_post_set_value_call=self.sma_fix2)) 
-#		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('InDCV_3', 'Analog voltage input 3 (V)', 34649, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'V', an_is_metadata=False, a_post_set_value_call=self.sma_fix2)) 
-#		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('InDCV_4', 'Analog voltage input 4 (V)', 34651, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'V', an_is_metadata=False, a_post_set_value_call=self.sma_fix2)) 
-#		SitUtils.od_extend(l_reg_list, RegisterTypeInt16s('WSetPointDirTotal', 'Direct marketer: Active power setpoint P, in % of the maximum active power (PMAX) of the PV plant. -100-0=Load|0=No active power|0-100 generator', 40493, l_slave_address, SitModbusRegister.ACCESS_MODE_R, '%', an_is_metadata=False, a_post_set_value_call=self.sma_fix2)) 
-#		SitUtils.od_extend(l_reg_list, RegisterTypeInt32u('WSetPointMan', 'Active power setpoint (manual specification)', 41167, l_slave_address, SitModbusRegister.ACCESS_MODE_R, '%', an_is_metadata=False, a_post_set_value_call=self.sma_fix2)) 
-#		# IRRADIATIONS
-#		# not working on sanbe, getting max_int, SitUtils.od_extend(l_reg_list, RegisterTypeInt32u('IrradiationSurfaceTot', 'Total irradiation on the sensor surface (W/m2)', 34613, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'W/m2', an_is_metadata=False))
-#		SitUtils.od_extend(l_reg_list, RegisterTypeInt32u('GHI', 'Total irradiation on the external irradiation sensor/pyranometer (W/m2)', 34623, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'W/m2', an_is_metadata=False))
-#
-#		self.append_modbus_registers(l_reg_list)
+	#
+		#PARAMETERS UNIT_ID = 2 (p.26 of doc)
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt32u('WDigIo', 'Active power setpoint Digital I/O', 31235, l_slave_address, SitModbusRegister.ACCESS_MODE_R, '%', an_is_metadata=False, a_post_set_value_call=self.sma_fix2))
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt32u('WAnalog', 'Active power setpoint Analog', 31237, l_slave_address, SitModbusRegister.ACCESS_MODE_R, '%', an_is_metadata=False, a_post_set_value_call=self.sma_fix2))
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt32u('WSetPoint', 'Active power setpoint in %s', 31239, l_slave_address, SitModbusRegister.ACCESS_MODE_R, '%', an_is_metadata=False, a_post_set_value_call=self.sma_fix2))
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('WSetPointDirMar', 'Active power setpoint in %s Specification Modbus Direct marketing', 31241, l_slave_address, SitModbusRegister.ACCESS_MODE_R, '%', an_is_metadata=False, a_post_set_value_call=self.sma_fix2)) 
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt32u('ResSetPoint', 'Resulting setpoint (minimum value definition of all specifications)', 31243, l_slave_address, SitModbusRegister.ACCESS_MODE_R, '%', an_is_metadata=False, a_post_set_value_call=self.sma_fix2)) 
+		#Strange
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('WExport', 'Current utility grid export active power P in W (actual value of the active power fed in at the grid-connection point; measured with an external measuring device).', 31249, l_slave_address, SitModbusRegister.ACCESS_MODE_R, '%', an_is_metadata=False)) 
+
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('VArExport', 'Current utility grid export reactive power Q in VAr (actual value of the reactive power fed in at the grid- connection point; measured with an external measuring device).', 31251, l_slave_address, SitModbusRegister.ACCESS_MODE_R, '%', an_is_metadata=False)) 
+
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('AC_1', 'Analog current input 1 (mA)', 34637, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'mA', an_is_metadata=False, a_post_set_value_call=self.sma_fix2)) 
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('AC_2', 'Analog current input 2 (mA)', 34639, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'mA', an_is_metadata=False, a_post_set_value_call=self.sma_fix2)) 
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('AC_3', 'Analog current input 3 (mA)', 34641, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'mA', an_is_metadata=False, a_post_set_value_call=self.sma_fix2)) 
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('AC_4', 'Analog current input 4 (mA)', 34643, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'mA', an_is_metadata=False, a_post_set_value_call=self.sma_fix2)) 
+
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('InDCV_1', 'Analog voltage input 1 (V)', 34645, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'V', an_is_metadata=False, a_post_set_value_call=self.sma_fix2)) 
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('InDCV_2', 'Analog voltage input 2 (V)', 34647, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'V', an_is_metadata=False, a_post_set_value_call=self.sma_fix2)) 
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('InDCV_3', 'Analog voltage input 3 (V)', 34649, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'V', an_is_metadata=False, a_post_set_value_call=self.sma_fix2)) 
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('InDCV_4', 'Analog voltage input 4 (V)', 34651, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'V', an_is_metadata=False, a_post_set_value_call=self.sma_fix2)) 
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt16s('WSetPointDirTotal', 'Direct marketer: Active power setpoint P, in % of the maximum active power (PMAX) of the PV plant. -100-0=Load|0=No active power|0-100 generator', 40493, l_slave_address, SitModbusRegister.ACCESS_MODE_R, '%', an_is_metadata=False, a_post_set_value_call=self.sma_fix2)) 
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt32u('WSetPointMan', 'Active power setpoint (manual specification)', 41167, l_slave_address, SitModbusRegister.ACCESS_MODE_R, '%', an_is_metadata=False, a_post_set_value_call=self.sma_fix2)) 
+		# IRRADIATIONS
+		# not working on sanbe, getting max_int, SitUtils.od_extend(l_reg_list, RegisterTypeInt32u('IrradiationSurfaceTot', 'Total irradiation on the sensor surface (W/m2)', 34613, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'W/m2', an_is_metadata=False))
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt32u('GHI', 'Total irradiation on the external irradiation sensor/pyranometer (W/m2)', 34623, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'W/m2', an_is_metadata=False))
+
+		self.append_modbus_registers(l_reg_list)
 
 
 	def sma_fix2(self, a_sit_modbus_register):
