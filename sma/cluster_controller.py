@@ -8,7 +8,7 @@
 #			Logging into /var/log/solarity/file_name.log
 #
 #       CALL SAMPLE:
-#			/data/solarity/sit-raspi/modbus/cluster_controller.py --host_ip '192.168.0.74' --host_mac '00:90:E8:73:0A:D6' --store_values --raise_event
+#			/data/solarity/sit-raspi/sty-pub-raspi-modbus-drivers/sma/cluster_controller.py --host_ip '192.168.0.74' --host_mac '00:90:E8:73:0A:D6' --store_values --raise_event
 #	
 #	REQUIRE
 #		**** PYTHON *****
