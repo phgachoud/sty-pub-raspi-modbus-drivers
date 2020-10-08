@@ -135,6 +135,7 @@ class NobrandBlackRsRaN01Jt(SitModbusDevice):
 
 		l_reg_list = OrderedDict()
 		SitUtils.od_extend(l_reg_list, RegisterTypeInt16u('GHI', 'Total irradiation on the external irradiation sensor/pyranometer (W/m2)', 0x0, a_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Int16u', an_is_metadata=False))
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt16u('GHIDev', 'Solar radiation deviation (0~1800)', 0x52, a_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Int16u', an_is_metadata=False))
 		self.append_modbus_registers(l_reg_list)
 
 #		self.add_cc_only_sit_modbus_registers(1)

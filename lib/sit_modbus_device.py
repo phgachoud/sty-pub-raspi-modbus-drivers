@@ -177,6 +177,7 @@ class SitModbusDevice (object):
 			try:
 				if self._target_mode == self.TARGET_MODE_RTU:
 					assert os.geteuid() == 0, 'user must be root for RTU mode'
+					# DOC: https://github.com/riptideio/pymodbus/blob/8ef32997ee1da1cd465f2e19ff3b54b93d38728c/pymodbus/repl/main.py
 					self._modbus_client = ModbusSerialClient(method=self._target_mode, port=str(self._target_port), timeout=self._rtu_timeout, stopbits=self._rtu_stopbits, bytesize=self._rtu_bytesize, parity=self._rtu_parity, baudrate=self._rtu_baudrate)
 					self._logger.debug('connect->target:{} port:{} timeout:{} stopbit:{} bytesize:{} parity:{} baudrate:{}'.format(self._target_mode, str(self._target_port), self._rtu_timeout, self._rtu_stopbits, self._rtu_bytesize, self._rtu_parity, self._rtu_baudrate))
 					self._logger.info('connect->RTU Client Mode:{}'.format(self._target_mode))
