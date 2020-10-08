@@ -72,9 +72,9 @@ class RegisterTypeInt32u(SitModbusRegister):
 		"""
 		try:
 			assert SitModbusDevice.valid_slave_address(a_slave_address), 'invalid a_slave_address:{}'.format(a_slave_address)
+			self._logger = SitLogger().new_logger(__name__)
 			super().__init__(a_short_description, a_description, a_register_index, a_slave_address, an_access_mode, a_value_unit, a_scale_factor_register_index, an_event, an_is_metadata, a_post_set_value_call)
 			#*** Logger
-			self._logger = SitLogger().new_logger(__name__)
 			self.invariants()
 		except OSError as l_e:
 			self._logger.warning("init-> OSError, probably rollingfileAppender {}".format(l_e))

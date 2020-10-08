@@ -8,7 +8,7 @@
 #			Logging into /var/log/solarity/file_name.log
 #
 #       CALL SAMPLE:
-#			/data/solarity/sit-raspi/sty-pub-raspi-modbus-drivers/nobrand_black_irradiance_sensor_from_ali_rs-ra-n01-jt.py --host_ip '192.168.0.74' --host_mac '00:90:E8:73:0A:D6' --store_values --raise_event
+#			~/data/solarity/sit-raspi/sty-pub-raspi-modbus-drivers/nobrand/nobrand_black_irradiance_sensor_from_ali_rs-ra-n01-jt.py --host_ip '192.168.0.74' --host_mac '00:90:E8:73:0A:D6' --store_values --raise_event
 #	
 #	REQUIRE
 #		**** PYTHON *****
@@ -85,7 +85,7 @@ class NobrandBlackRsRaN01Jt(SitModbusDevice):
 # CONSTANTS
 
 	DEFAULT_SLAVE_ADDRESS = 1
-	DEFAULT_MODBUS_PORT = 502
+	DEFAULT_MODBUS_PORT = '/dev/ttyUSB0'
 	DEFAULT_TARGET_MODE = SitModbusDevice.TARGET_MODE_RTU
 	PARSER_DESCRIPTION = 'Actions with RS-RA-N01-JT from ali irradiance sensor' + SitConstants.DEFAULT_HELP_LICENSE_NOTICE
 
@@ -96,6 +96,7 @@ class NobrandBlackRsRaN01Jt(SitModbusDevice):
 	_substract_one_to_register_index = False
 	_rtu_baudrate = 4800
 	_rtu_parity = 'N'
+	_rtu_timeout = 10 #seconds
 
 # FUNCTIONS DEFINITION 
 
@@ -133,7 +134,7 @@ class NobrandBlackRsRaN01Jt(SitModbusDevice):
 		assert self.valid_slave_address(a_slave_address), 'invalid a_slave_address:{}'.format(a_slave_address)
 
 		l_reg_list = OrderedDict()
-		SitUtils.od_extend(l_reg_list, RegisterTypeInt32u('GHI', 'Total irradiation on the external irradiation sensor/pyranometer (W/m2)', 30001, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Int32u', an_is_metadata=True))
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt16u('GHI', 'Total irradiation on the external irradiation sensor/pyranometer (W/m2)', 0x0, a_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Int16u', an_is_metadata=False))
 		self.append_modbus_registers(l_reg_list)
 
 #		self.add_cc_only_sit_modbus_registers(1)
@@ -256,66 +257,6 @@ class NobrandBlackRsRaN01Jt(SitModbusDevice):
 				l_msg = '_W_event-> Event not raised register_index:{} value ({} > {}), valid_time:{}'.format(a_sit_modbus_register.register_index, l_val, l_min_val, l_valid_time)
 				self._logger.debug(l_msg)
 
-	def _setted_parts(self, a_subject, a_body):
-		return a_subject, a_body
-
-	def manual_restart(self):
-		"""
-		Manual restart 
-		documented on p.45 of doc
-		"""
-		l_res = 'test_res'
-		self._logger.info('manual_restart-> NOW')
-		#a_register_index, a_slave_address, a_value):
-		l_res = self.write_register_value(0, 201, 1)
-		self._logger.info('manual_restart-> result:{}'.format(l_res))
-
-		return l_res
-
-	def read_all_sit_modbus_registers(self): 
-		"""
-		Read inverters data
-		"""
-		super().read_all_sit_modbus_registers()
-
-#		l_reg_index = 42109
-#		l_slave_address = 3
-#		self.read_inverter_data(l_slave_address)
-	
-	def read_inverter_data(self, a_slave_address):
-		"""
-		Was for test but not working
-		"""
-		assert False, 'deprecated'
-		l_reg = RegisterTypeInt64u('Wh2', 'Total energy fed in across all line conductors, in Wh (accumulated values of the inverters) System param', 30513, SitModbusRegister.ACCESS_MODE_R, 'Wh', an_is_metadata=False, a_slave_address=a_slave_address)
-		self.read_inverter_data_register(l_reg, a_slave_address)
-		print (l_reg.out_human_readable(a_with_description=True))
-
-#		l_reg = RegisterTypeInt32u('SN', 'Serial Number', a_reg_index + 1, SitModbusRegister.ACCESS_MODE_R, 'Int32u', an_is_metadata=True)
-#		self.read_inverter_data_register(l_reg, a_slave_address)
-#
-#		l_reg = RegisterTypeInt16u('UnitID', 'Unit ID', a_reg_index + 3, SitModbusRegister.ACCESS_MODE_R, 'Int32u', an_is_metadata=True)
-#		self.read_inverter_data_register(l_reg, a_slave_address)
-
-
-	def read_inverter_data_register(self, a_register, a_slave_address):
-		"""
-		Reads given inverter data
-		Was for test but not working
-		"""
-		assert False, 'deprecated'
-		try:
-			self.read_sit_modbus_register(a_register, a_slave_address)
-			if self._args.store_values:
-				pass
-	#			self.store_values_into_csv([l_reg], l_slave)
-			if self._args.display_all:
-				print('***************** INVERTER slave:{} ******************'.format(a_slave_address))
-				print(a_register.out_human_readable(a_with_description=self._args.long))
-		except ModbusException as l_e:
-			self._logger.error('read_inverter_data-> error reading register {}'.format(l_e))
-		except Exception as l_e:
-			raise l_e
 
 # ACCESS
 

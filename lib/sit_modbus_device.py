@@ -107,7 +107,6 @@ class SitModbusDevice (object):
 	_is_connected = False
 	_base_url = DEFAULT_BASE_URL
 
-	_port = None
 	_target_ip = None
 	_target_port = DEFAULT_TARGET_PORT
 	_target_mode = DEFAULT_TARGET_MODE
@@ -138,12 +137,13 @@ class SitModbusDevice (object):
 		"""
 		assert self.valid_slave_address(a_slave_address), 'invalid a_slave_address:{}'.format(a_slave_address)
 
-		self._port = a_port
+		self._target_port = a_port
 		self._slave_address = a_slave_address
 		self._target_ip = an_ip_address
 
 		self._logger = SitLogger().new_logger(self.__class__.__name__)
 		self._sit_json_conf = SitJsonConf(__name__)
+		self._target_mode = a_target_mode
 
 		if self._target_mode == self.TARGET_MODE_TCP:
 			assert self.valid_ip(self._target_ip), 'valid ip address'
@@ -172,13 +172,18 @@ class SitModbusDevice (object):
 		assert not self.is_connected()
 
 		l_retries_count = 0
+		self._logger.debug('connect-> with args target_mode:{} port:{} rtu_timeout:{} baudrate:{}'.format(self._target_mode, self._target_port, self._rtu_timeout, self._rtu_baudrate))
 		while l_retries_count < self.MAX_CONNECT_RETRIES_COUNT and not self._is_connected:
 			try:
 				if self._target_mode == self.TARGET_MODE_RTU:
-					self._modbus_client = ModbusSerialClient(method=self._target_mode, port=self._target_port, timeout=self._rtu_timeout, stopbits=self._rtu_stopbits, bytesize=self._rtu_bytesize, parity=self._rtu_parity, baudrate=self._rtu_baudrate)
+					assert os.geteuid() == 0, 'user must be root for RTU mode'
+					self._modbus_client = ModbusSerialClient(method=self._target_mode, port=str(self._target_port), timeout=self._rtu_timeout, stopbits=self._rtu_stopbits, bytesize=self._rtu_bytesize, parity=self._rtu_parity, baudrate=self._rtu_baudrate)
+					self._logger.debug('connect->target:{} port:{} timeout:{} stopbit:{} bytesize:{} parity:{} baudrate:{}'.format(self._target_mode, str(self._target_port), self._rtu_timeout, self._rtu_stopbits, self._rtu_bytesize, self._rtu_parity, self._rtu_baudrate))
+					self._logger.info('connect->RTU Client Mode:{}'.format(self._target_mode))
 				else:
 					assert self._target_mode == self.TARGET_MODE_TCP
-					self._modbus_client = ModbusTcpClient(self._target_ip, port=self._target_port, retries=self._client_connect_retries, retry_on_empty=True)
+					self._modbus_client = ModbusTcpClient(self._target_ip, port=str(self._target_port), retries=self._client_connect_retries, retry_on_empty=True)
+					self._logger.info('connect->TCP Client Mode:{}'.format(self._target_mode))
 
 				#Connect to the serial modbus server
 				connection = self._modbus_client.connect()
@@ -191,10 +196,10 @@ class SitModbusDevice (object):
 					raise ConnectionException("connect->Could not connect to _modbus_client")
 			except ConnectionException as l_e:
 				l_retries_count += 1
-				self._logger.exception("connect->ConnectionException occured during connection, retrying:{}".format(l_e.message))
+				self._logger.exception("connect->ConnectionException occured during connection, retrying:{}".format(l_e))
 				time.sleep(1)
 			except Exception as l_e:
-				self._logger.exception("connect->Exception occured during connection:{}".format(l_e.message))
+				self._logger.exception("connect->Exception occured during connection:{}".format(l_e))
 				raise l_e
 
 # HIGH LEVEL FUNCTIONS
@@ -848,7 +853,7 @@ class SitModbusDevice (object):
 	def out_without_registers(self, a_sep='\n', an_item_prefix=''):
 		l_res = ''
 
-		l_res = l_res + an_item_prefix + 'port:' + str(self._port) + a_sep
+		l_res = l_res + an_item_prefix + 'port:' + str(self._target_port) + a_sep
 		l_res = l_res + an_item_prefix + 'target_ip:' + self._target_ip + a_sep
 		l_res = l_res + an_item_prefix + 'target_mode:' + self._target_mode + a_sep
 		l_res = l_res + an_item_prefix + 'slave_address:' + str(self._slave_address) + a_sep
