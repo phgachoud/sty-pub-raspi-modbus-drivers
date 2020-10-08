@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 #       DESCRIPTION: 
-#			cluster controller script to get data from modbus and store them into csv file
+#			script to get data from modbus rtu for a rs-ra-n01-jt irradiation sensor and store them into csv file
+#				https://www.agromet.cl/ for data comparison
 #
 #            -h or --help for more informations about use
 #
@@ -9,6 +10,8 @@
 #
 #       CALL SAMPLE:
 #			~/data/solarity/sit-raspi/sty-pub-raspi-modbus-drivers/nobrand/nobrand_black_irradiance_sensor_from_ali_rs-ra-n01-jt.py --host_ip '192.168.0.74' --host_mac '00:90:E8:73:0A:D6' --store_values --raise_event
+#				
+#	
 #	
 #	REQUIRE
 #		**** PYTHON *****

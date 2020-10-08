@@ -111,7 +111,7 @@ class RegisterTypeInt16u(SitModbusRegister):
 		decoder = BinaryPayloadDecoder.fromRegisters(a_register_read_res.registers, byteorder=self._byte_order, wordorder=self._word_order) #https://pymodbus.readthedocs.io/en/latest/source/example/modbus_payload.html
 		#https://pymodbus.readthedocs.io/en/v1.3.2/library/payload.html?highlight=binarypayloaddecoder#pymodbus.payload.BinaryPayloadDecoder
 		l_v = decoder.decode_16bit_uint()
-		#self._logger.debug("set_value_with_raw->after decoder:{}".format(l_v))
+		#self._logger.debug("set_value_with_raw->after decoder:{} raw_int:{} raw_register_hexa:0x{}".format(l_v, a_register_read_res.registers[0], '{:02X}'.format(a_register_read_res.registers[0])))
 		self._value = l_v
 
 
