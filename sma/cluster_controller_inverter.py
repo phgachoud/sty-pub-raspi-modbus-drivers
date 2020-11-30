@@ -147,12 +147,16 @@ class ClusterControllerInverter(ClusterController):
 		COMMON REGISTERS to ClusterController and Inverters
 		"""
 		super().add_common_sit_modbus_registers(a_slave_address)
-#		l_reg_list = OrderedDict()
-#
-#		#PARAMETERS UNIT_ID = 2 (p.26 of doc)
-#		SitUtils.od_extend(l_reg_list, RegisterTypeInt64u('Wh2', 'Total energy fed in across all line conductors, in Wh (accumulated values of the inverters) System param', 30513, SitModbusRegister.ACCESS_MODE_R, 'Wh', an_is_metadata=False, a_slave_address=2))
-#
-#		self.append_modbus_registers(l_reg_list)
+		l_reg_list = OrderedDict()
+		l_slave_address = a_slave_address
+
+		#PARAMETERS UNIT_ID = 2 (p.26 of doc)
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt32u('EvtNr', '30213: For error description refere to SMA register address 30247; 30247: Description of the event message, see the documentation of the product', 30247, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'enum', an_is_metadata=False))
+
+
+		#SitUtils.od_extend(l_reg_list, RegisterTypeInt32u('EvtNr', '30213: For error description refere to SMA register address 30247; 30247: Description of the event message, see the documentation of the product', 30247, SitModbusRegister.ACCESS_MODE_R, 'enum', an_is_metadata=False, a_slave_address=a_slave_address))
+
+		self.append_modbus_registers(l_reg_list)
 
 
 # MODBUS READING
