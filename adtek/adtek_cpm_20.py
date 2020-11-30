@@ -612,7 +612,7 @@ class AdtekCpm20:
 		"""
 		Parsing arguments
 		"""
-		self._parser = argparse.ArgumentParser(description=self.PARSER_DESCRIPTION)
+		self.__parser = argparse.ArgumentParser(description=self.PARSER_DESCRIPTION)
 		self.__parser.add_argument('-v', '--verbose', help='increase output verbosity', action="store_true")
 		self.__parser.add_argument('-s', '--store_values', help='Store values into csv file', action="store_true")
 		self.__parser.add_argument('-d', '--display_only', help='Only display read value, doesnt do the associated action (as logger INFO level)', action="store_true")
