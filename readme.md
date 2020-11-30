@@ -70,3 +70,6 @@ respectivly
   * /huawei/smart_logger_1000a.py
   * /huawei/smart_logger_1000a_inverter.py
 
+## NO Brand aliexpress irradiation sensor rs-ra-n01-JT
+  * /nobrand/nobrand_black_irradiance_sensor_from_ali_rs-ra-n01-jt.py
+

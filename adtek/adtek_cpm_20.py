@@ -82,6 +82,7 @@ class AdtekCpm20:
 
 	LOG_FILE_PATH = '/var/log/solarity'
 	DEFAULT_CSV_FILE_LOCATION = '/var/solarity' #without ending slash
+	PARSER_DESCRIPTION='Adtek pcm20 driver'
 
 # VARIABLES
 	__logger = None

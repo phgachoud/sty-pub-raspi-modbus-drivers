@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 #       DESCRIPTION: 
-#			huawei smart logger 1000a script to get data from modbus and store them into csv file
+#			SMA data manager script to get data from modbus and store them into csv file
 #
 #            -h or --help for more informations about use
 #
 #			Logging into /var/log/solarity/file_name.log
 #
 #       CALL SAMPLE:
-	#		/data/solarity/sit-raspi/sty-pub-raspi-modbus-drivers/huawei/smart_logger_1000a.py --host_ip '192.168.0.74' --host_mac '00:90:E8:73:0A:D6' --store_values --raise_event
+#			/data/solarity/sit-raspi/modbus/data_manager.py --host_ip '192.168.0.74' --host_mac '00:90:E8:73:0A:D6' --store_values --raise_event
 #	
 #	REQUIRE
 #		**** PYTHON *****
@@ -22,7 +22,7 @@
 #
 #		*************************************************************************************************
 #       @author: Philippe Gachoud
-#       @creation: 20200614
+#       @creation: 20200824
 #       @last modification:
 #       @version: 1.0
 #       @URL: $URL
@@ -70,7 +70,6 @@ try:
 	from register_type_int32_u import RegisterTypeInt32u
 	from register_type_int32_s import RegisterTypeInt32s
 	from register_type_int64_u import RegisterTypeInt64u
-	from register_type_string_var import RegisterTypeStringVar
 	from register_type_sma_cc_device_class import RegisterTypeSmaCCDeviceClass
 	from sit_date_time import SitDateTime
 	from sit_json_conf import SitJsonConf
@@ -81,15 +80,15 @@ except ImportError as l_err:
 	print(sys.path)
 	raise l_err
 
-class SmartLogger1000a(SitModbusDevice):
+class DataManager(SitModbusDevice):
 
 # CONSTANTS
 
 	DEFAULT_SLAVE_ADDRESS = 1
 	DEFAULT_MODBUS_PORT = 502
 	DEFAULT_TARGET_MODE = SitModbusDevice.TARGET_MODE_TCP
-	MIN_W_FOR_RAISE_EVENT_GENERATION = 5000
-	PARSER_DESCRIPTION = 'Actions with Huawei smart logger 1000a device. ' + SitConstants.DEFAULT_HELP_LICENSE_NOTICE
+	MIN_W_FOR_RAISE_EVENT_GENERATION = 2000
+	PARSER_DESCRIPTION = 'Actions with sma data manager device. ' + SitConstants.DEFAULT_HELP_LICENSE_NOTICE
 
 # CLASS ATTRIBUTES
 
@@ -132,6 +131,7 @@ class SmartLogger1000a(SitModbusDevice):
 		"""
 		assert self.valid_slave_address(a_slave_address), 'invalid a_slave_address:{}'.format(a_slave_address)
 		self.add_common_sit_modbus_registers(1)
+		self.add_dm_only_sit_modbus_registers(2)
 
 		self.invariants()
 
@@ -145,38 +145,68 @@ class SmartLogger1000a(SitModbusDevice):
 
 		l_reg_list = OrderedDict()
 		l_slave_address = a_slave_address
-		SitUtils.od_extend(l_reg_list, RegisterTypeStringVar(SitConstants.SS_REG_SHORT_ABB_SERIAL_NUMBER, 'ESN', 40713, 10, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'W', an_is_metadata=True))
-		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s(SitConstants.SS_REG_SHORT_ABB_AC_POWER, 'Total active output power of all inverters', 40525, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'W', an_is_metadata=False, an_event=SitModbusRegisterEvent(self._W_event)))
-		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s(SitConstants.SS_REG_SHORT_ABB_AC_S_REACTIVE_POWER, 'Reactive power', 40544, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'kVar', an_is_metadata=False))
-
-		# Active power control
-	#	SitUtils.od_extend(l_reg_list, RegisterTypeInt16u(SitConstants.SS_REG_SHORT_ABB_STATUS_OPERATING_STATE, 'Plant Status 1=Unlimited/2Limited/3Idle/4Fault/5Communication_interrupt', 40543, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Enum', an_is_metadata=False)) # Not working on tranque sante and maristas santamaria
-		SitUtils.od_extend(l_reg_list, RegisterTypeInt16u('PlantSt2', 'Plant Status 2 0=ildle/1=on-grid/...', 40566, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Enum', an_is_metadata=False))
-		SitUtils.od_extend(l_reg_list, RegisterTypeInt16u('ActPwrCtlMode', 'Active power control mode 0=no limit/other...', 40737, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Enum', an_is_metadata=False))
-		#Meter
-		# UNABLE TO READ IT SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('WMeter', 'Active power of meter', 32278, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'W', an_is_metadata=False))
-
-		#Huawei specials
-		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s(SitConstants.SS_REG_SHORT_EXTRA_HUAWEI_ACT_POWER_ADJ, 'Active Power adjustment', 40426, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Int', an_is_metadata=False))
-		SitUtils.od_extend(l_reg_list, RegisterTypeInt16u(SitConstants.SS_REG_SHORT_EXTRA_HUAWEI_ACT_POWER_ADJ_PCT, 'Active Power adjustment percentage', 40428, l_slave_address, SitModbusRegister.ACCESS_MODE_R, '%', an_is_metadata=False))
-
-
-		#SitUtils.od_extend(l_reg_list, RegisterTypeStrVar('Mn', 'Model', 30000, 15, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'String15', an_is_metadata=True))
 
 		# CLUSTER AND INVERTERS
-#		SitUtils.od_extend(l_reg_list, RegisterTypeInt32u('Vr', 'Version number of the SMA Modbus profile', 30001, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Int32u', an_is_metadata=True))
-#		
-#		SitUtils.od_extend(l_reg_list, RegisterTypeInt32u('ID', 'SUSy ID (of the Cluster Controller)', 30003, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Int32u', an_is_metadata=True))
-#		SitUtils.od_extend(l_reg_list, RegisterTypeInt32u('SN', 'Serial number (of the Cluster Controller)', 30005, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Int32u', an_is_metadata=True))
-#		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('NewData', 'Modbus data change: meter value is increased by the Cluster Controller if new data is available.', 30007, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Int32u', an_is_metadata=False))
-#		SitUtils.od_extend(l_reg_list, RegisterTypeSmaCCDeviceClass('DeviceClass', 'Device Class', 30051, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Enum', an_is_metadata=True))
-#
-#		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('W', 'Current active power on all line conductors (W), accumulated values of the inverters', 30775, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'W', an_is_metadata=False, an_event=SitModbusRegisterEvent(self._W_event)))
-#		SitUtils.od_extend(l_reg_list, RegisterTypeInt64u('Wh', 'Total energy fed in across all line conductors, in Wh (accumulated values of the inverters) System param', 30513, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Wh', an_is_metadata=False))
-#		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('VAr', 'Reactive power on all line conductors (var), accumulated values of the inverters', 30805, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'VAr', an_is_metadata=False))
-#		SitUtils.od_extend(l_reg_list, RegisterTypeInt64u('TotWhDay', 'Energy fed in on current day across all line conductors, in Wh (accumulated values of the inverters)', 30517, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Wh', an_is_metadata=False))
-#
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt32u('Vr', 'Version number of the SMA Modbus profile', 30001, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Int32u', an_is_metadata=True))
+		
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt32u('ID', 'SUSy ID (of the Data manager)', 30003, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Int32u', an_is_metadata=True))
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt32u('SN', 'Serial number (of the Cluster Controller)', 30005, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Int32u', an_is_metadata=True))
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('NewData', 'Modbus data change: meter value is increased by the Cluster Controller if new data is available.', 30007, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Int32u', an_is_metadata=False))
+		SitUtils.od_extend(l_reg_list, RegisterTypeSmaCCDeviceClass('DeviceClass', 'Device Class', 30051, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Enum', an_is_metadata=True))
+
+		# Doc tells unitID=2?? p.16
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('W', 'Current active power on all line conductors (W), accumulated values of the inverters', 30775, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'W', an_is_metadata=False, an_event=SitModbusRegisterEvent(self._W_event)))
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt64u('Wh', 'Total energy fed in across all line conductors, in Wh (accumulated values of the inverters) System param', 30513, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Wh', an_is_metadata=False))
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('VAr', 'Reactive power on all line conductors (var), accumulated values of the inverters', 30805, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'VAr', an_is_metadata=False))
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt64u('TotWhDay', 'Energy fed in on current day across all line conductors, in Wh (accumulated values of the inverters)', 30517, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Wh', an_is_metadata=False))
+
 		self.append_modbus_registers(l_reg_list)
+
+	def add_dm_only_sit_modbus_registers(self, a_slave_address):
+		"""
+		Registers particular to cluster controller
+		"""
+		assert self.valid_slave_address(a_slave_address), 'invalid a_slave_address:{}'.format(a_slave_address)
+		assert a_slave_address == 2, 'add_cc_only_sit_modbus_registers->for this part slave_address should be =2 and is:{}'.format(a_slave_address)
+		
+		l_reg_list = OrderedDict()
+		l_slave_address = a_slave_address
+	#
+		#PARAMETERS UNIT_ID = 2 (p.26 of doc)
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt32u('WDigIo', 'Active power setpoint Digital I/O', 31235, l_slave_address, SitModbusRegister.ACCESS_MODE_R, '%', an_is_metadata=False, a_post_set_value_call=self.sma_fix2))
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt32u('WAnalog', 'Active power setpoint Analog', 31237, l_slave_address, SitModbusRegister.ACCESS_MODE_R, '%', an_is_metadata=False, a_post_set_value_call=self.sma_fix2))
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt32u('WSetPoint', 'Active power setpoint in %s', 31239, l_slave_address, SitModbusRegister.ACCESS_MODE_R, '%', an_is_metadata=False, a_post_set_value_call=self.sma_fix2))
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('WSetPointDirMar', 'Active power setpoint in %s Specification Modbus Direct marketing', 31241, l_slave_address, SitModbusRegister.ACCESS_MODE_R, '%', an_is_metadata=False, a_post_set_value_call=self.sma_fix2)) 
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt32u('ResSetPoint', 'Resulting setpoint (minimum value definition of all specifications)', 31243, l_slave_address, SitModbusRegister.ACCESS_MODE_R, '%', an_is_metadata=False, a_post_set_value_call=self.sma_fix2)) 
+		#Strange
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('WExport', 'Current utility grid export active power P in W (actual value of the active power fed in at the grid-connection point; measured with an external measuring device).', 31249, l_slave_address, SitModbusRegister.ACCESS_MODE_R, '%', an_is_metadata=False)) 
+
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('VArExport', 'Current utility grid export reactive power Q in VAr (actual value of the reactive power fed in at the grid- connection point; measured with an external measuring device).', 31251, l_slave_address, SitModbusRegister.ACCESS_MODE_R, '%', an_is_metadata=False)) 
+
+		#SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('AC_1', 'Analog current input 1 (mA)', 34637, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'mA', an_is_metadata=False, a_post_set_value_call=self.sma_fix2)) 
+#		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('AC_2', 'Analog current input 2 (mA)', 34639, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'mA', an_is_metadata=False, a_post_set_value_call=self.sma_fix2)) 
+#		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('AC_3', 'Analog current input 3 (mA)', 34641, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'mA', an_is_metadata=False, a_post_set_value_call=self.sma_fix2)) 
+#		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('AC_4', 'Analog current input 4 (mA)', 34643, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'mA', an_is_metadata=False, a_post_set_value_call=self.sma_fix2)) 
+#
+#		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('InDCV_1', 'Analog voltage input 1 (V)', 34645, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'V', an_is_metadata=False, a_post_set_value_call=self.sma_fix2)) 
+#		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('InDCV_2', 'Analog voltage input 2 (V)', 34647, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'V', an_is_metadata=False, a_post_set_value_call=self.sma_fix2)) 
+#		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('InDCV_3', 'Analog voltage input 3 (V)', 34649, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'V', an_is_metadata=False, a_post_set_value_call=self.sma_fix2)) 
+#		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s('InDCV_4', 'Analog voltage input 4 (V)', 34651, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'V', an_is_metadata=False, a_post_set_value_call=self.sma_fix2)) 
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt16s('WSetPointDirTotal', 'Direct marketer: Active power setpoint P, in % of the maximum active power (PMAX) of the PV plant. -100-0=Load|0=No active power|0-100 generator', 40493, l_slave_address, SitModbusRegister.ACCESS_MODE_R, '%', an_is_metadata=False, a_post_set_value_call=self.sma_fix2)) 
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt32u('WSetPointMan', 'Active power setpoint (manual specification)', 41167, l_slave_address, SitModbusRegister.ACCESS_MODE_R, '%', an_is_metadata=False, a_post_set_value_call=self.sma_fix2)) 
+		# IRRADIATIONS
+		# not working on sanbe, getting max_int, SitUtils.od_extend(l_reg_list, RegisterTypeInt32u('IrradiationSurfaceTot', 'Total irradiation on the sensor surface (W/m2)', 34613, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'W/m2', an_is_metadata=False))
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt32u('GHI', 'Total irradiation on the external irradiation sensor/pyranometer (W/m2)', 34623, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'W/m2', an_is_metadata=False))
+
+		self.append_modbus_registers(l_reg_list)
+
+
+	def sma_fix2(self, a_sit_modbus_register):
+		"""
+		"""
+		l_new_val = a_sit_modbus_register.value / 100
+		self._logger.debug('sma_fix2->Setting new value-> old:{} new:{}'.format(a_sit_modbus_register.value, l_new_val))
+		a_sit_modbus_register.value = l_new_val
 
 	def _W_event(self, a_sit_modbus_register):
 		"""
@@ -382,7 +412,7 @@ def main():
 	logger = logging.getLogger(__name__)
 
 	try:
-		l_obj = SmartLogger1000a()
+		l_obj = DataManager()
 		l_obj.execute_corresponding_args()
 #		l_id.test()
 		pass

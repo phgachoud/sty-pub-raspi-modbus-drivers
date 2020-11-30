@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 #       DESCRIPTION: 
-#            Modbus interface for any device conected to SMA cluster_controller
+#            Modbus interface for any device conected to SMA data_manager
 #
 #            -h or --help for more informations about use
 #
 #			Logging into /var/log/solarity/file_name.log
 #
 #       CALL SAMPLE:
-#			/data/solarity/sit-raspi/modbus/cluster_controller_inverter.py --host_ip '192.168.0.74' --host_mac '00:90:E8:73:0A:D6' --store_values --raise_event --slave_address 3-7
+#			/data/solarity/sit-raspi/modbus/data_manager_inverter.py --host_ip '192.168.0.74' --host_mac '00:90:E8:73:0A:D6' --store_values --raise_event --slave_address 3-7
 #	
 #	REQUIRE
 #		**** PYTHON *****
@@ -21,7 +21,7 @@
 #
 #		*************************************************************************************************
 #       @author: Philippe Gachoud
-#       @creation: 20200423
+#       @creation: 20200824
 #       @last modification:
 #       @version: 1.0
 #       @URL: $URL
@@ -80,13 +80,13 @@ except ImportError as l_err:
 	print(sys.path)
 	raise l_err
 
-class ClusterControllerInverter(ClusterController):
+class DataManagerInverter(ClusterController):
 
 # CONSTANTS
 
 	DEFAULT_SLAVE_ADDRESS = 3
-	MIN_W_FOR_RAISE_EVENT_GENERATION = 50
-	PARSER_DESCRIPTION = 'Actions with sma cluster controller inverter.  ' + SitConstants.DEFAULT_HELP_LICENSE_NOTICE
+	MIN_W_FOR_RAISE_EVENT_GENERATION = 2000
+	PARSER_DESCRIPTION = 'Actions with sma data manager inverters .  ' + SitConstants.DEFAULT_HELP_LICENSE_NOTICE
 
 # CLASS ATTRIBUTES
 
@@ -147,16 +147,12 @@ class ClusterControllerInverter(ClusterController):
 		COMMON REGISTERS to ClusterController and Inverters
 		"""
 		super().add_common_sit_modbus_registers(a_slave_address)
-		l_reg_list = OrderedDict()
-		l_slave_address = a_slave_address
-
-		#PARAMETERS UNIT_ID = 2 (p.26 of doc)
-		SitUtils.od_extend(l_reg_list, RegisterTypeInt32u('EvtNr', '30213: For error description refere to SMA register address 30247; 30247: Description of the event message, see the documentation of the product', 30247, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'enum', an_is_metadata=False))
-
-
-		#SitUtils.od_extend(l_reg_list, RegisterTypeInt32u('EvtNr', '30213: For error description refere to SMA register address 30247; 30247: Description of the event message, see the documentation of the product', 30247, SitModbusRegister.ACCESS_MODE_R, 'enum', an_is_metadata=False, a_slave_address=a_slave_address))
-
-		self.append_modbus_registers(l_reg_list)
+#		l_reg_list = OrderedDict()
+#
+#		#PARAMETERS UNIT_ID = 2 (p.26 of doc)
+#		SitUtils.od_extend(l_reg_list, RegisterTypeInt64u('Wh2', 'Total energy fed in across all line conductors, in Wh (accumulated values of the inverters) System param', 30513, SitModbusRegister.ACCESS_MODE_R, 'Wh', an_is_metadata=False, a_slave_address=2))
+#
+#		self.append_modbus_registers(l_reg_list)
 
 
 # MODBUS READING
@@ -300,7 +296,7 @@ def main():
 	logger = logging.getLogger(__name__)
 
 	try:
-		l_obj = ClusterControllerInverter()
+		l_obj = DataManagerInverter()
 		l_obj.execute_corresponding_args()
 #		l_id.test()
 		pass
