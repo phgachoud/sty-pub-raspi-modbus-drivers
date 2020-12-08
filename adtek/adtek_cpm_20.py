@@ -561,6 +561,8 @@ class AdtekCpm20:
 		self.__logger.debug("register_values_u_long->after decoder:%s" % l_result)
 		return l_result
 
+		
+
 	def store_values_into_csv(self, a_row_dict):
 		"""
 		Stores values into CSV DEFAULT_CSV_FILE_LOCATION
@@ -574,6 +576,8 @@ class AdtekCpm20:
 				l_csv_writter = csv.writer(l_csv_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 				if not l_file_exists:
 					self.__logger.info("store_values_into_csv->Writting HEADER row: %s" % (';'.join(str(l) for l in a_row_dict.keys())))
+					l_csv_writter.writerow(['#Mn','Adtek']) #Manufacturer
+					l_csv_writter.writerow(['#Md','Cpm20']) #Model
 					l_csv_writter.writerow(a_row_dict.keys())
 				self.__logger.info("store_values_into_csv->HEADER row: %s" % (';'.join(str(l) for l in a_row_dict.keys())))
 				self.__logger.info("store_values_into_csv->Writting row: %s" % (';'.join(str(l) for l in a_row_dict.values())))
