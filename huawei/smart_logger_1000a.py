@@ -150,7 +150,7 @@ class SmartLogger1000a(SitModbusDevice):
 		SitUtils.od_extend(l_reg_list, RegisterTypeInt32s(SitConstants.SS_REG_SHORT_ABB_AC_S_REACTIVE_POWER, 'Reactive power', 40544, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'kVar', an_is_metadata=False))
 
 		# Active power control
-		SitUtils.od_extend(l_reg_list, RegisterTypeInt16u(SitConstants.SS_REG_SHORT_ABB_STATUS_OPERATING_STATE, 'Plant Status 1=Unlimited/2Limited/3Idle/4Fault/5Communication_interrupt', 40543, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Enum', an_is_metadata=False))
+	#	SitUtils.od_extend(l_reg_list, RegisterTypeInt16u(SitConstants.SS_REG_SHORT_ABB_STATUS_OPERATING_STATE, 'Plant Status 1=Unlimited/2Limited/3Idle/4Fault/5Communication_interrupt', 40543, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Enum', an_is_metadata=False)) # Not working on tranque sante and maristas santamaria
 		SitUtils.od_extend(l_reg_list, RegisterTypeInt16u('PlantSt2', 'Plant Status 2 0=ildle/1=on-grid/...', 40566, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Enum', an_is_metadata=False))
 		SitUtils.od_extend(l_reg_list, RegisterTypeInt16u('ActPwrCtlMode', 'Active power control mode 0=no limit/other...', 40737, l_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Enum', an_is_metadata=False))
 		#Meter
