@@ -181,7 +181,7 @@ class SitModbusRegister(ABC):
 		"""
 		try:
 			l_is_int = int(v)
-			l_res = l_is_int > 0
+			l_res = l_is_int >= 0
 		except Exception as l_e:
 			l_res = False
 
