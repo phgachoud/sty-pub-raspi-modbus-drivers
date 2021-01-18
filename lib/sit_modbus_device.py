@@ -179,6 +179,7 @@ class SitModbusDevice (object):
 					assert os.geteuid() == 0, 'user must be root for RTU mode'
 					# DOC: https://github.com/riptideio/pymodbus/blob/8ef32997ee1da1cd465f2e19ff3b54b93d38728c/pymodbus/repl/main.py
 					self._modbus_client = ModbusSerialClient(method=self._target_mode, port=str(self._target_port), timeout=self._rtu_timeout, stopbits=self._rtu_stopbits, bytesize=self._rtu_bytesize, parity=self._rtu_parity, baudrate=self._rtu_baudrate)
+					self._modbus_client.debug_enabled = True
 					self._logger.debug('connect->target:{} port:{} timeout:{} stopbit:{} bytesize:{} parity:{} baudrate:{}'.format(self._target_mode, str(self._target_port), self._rtu_timeout, self._rtu_stopbits, self._rtu_bytesize, self._rtu_parity, self._rtu_baudrate))
 					self._logger.info('connect->RTU Client Mode:{}'.format(self._target_mode))
 				else:
@@ -510,7 +511,7 @@ class SitModbusDevice (object):
 		@a_register_index: a register index
 		"""
 		l_register_res = self.register_value(a_register_index, 1, a_slave_address)
-		#self._logger.debug("register_values_u_long->before decoder:%s" % l_register_res.registers)
+		#self._logger.debug("register_values_16_s->before decoder:%s" % l_register_res.registers)
 		decoder = BinaryPayloadDecoder.fromRegisters(l_register_res.registers, byteorder=Endian.Big, wordorder=Endian.Big) #https://pymodbus.readthedocs.io/en/latest/source/example/modbus_payload.html
 		#https://pymodbus.readthedocs.io/en/v1.3.2/library/payload.html?highlight=binarypayloaddecoder#pymodbus.payload.BinaryPayloadDecoder
 		l_result = decoder.decode_16bit_int()
@@ -524,7 +525,7 @@ class SitModbusDevice (object):
 		@a_register_index: a register index
 		"""
 		l_register_res = self.register_value(a_register_index, 1, a_slave_address)
-		#self._logger.debug("register_values_u_long->before decoder:%s" % l_register_res.registers)
+		#self._logger.debug("register_values_int_16_u->before decoder:%s" % l_register_res.registers)
 		decoder = BinaryPayloadDecoder.fromRegisters(l_register_res.registers, byteorder=Endian.Big, wordorder=Endian.Big) #https://pymodbus.readthedocs.io/en/latest/source/example/modbus_payload.html
 		#https://pymodbus.readthedocs.io/en/v1.3.2/library/payload.html?highlight=binarypayloaddecoder#pymodbus.payload.BinaryPayloadDecoder
 		l_result = decoder.decode_16bit_uint()

@@ -105,7 +105,7 @@ class RenkeYgcJyz12VW2(SitModbusDevice):
 	_substract_one_to_register_index = False
 	_rtu_baudrate = 9600
 	_rtu_parity = 'N'
-	_rtu_timeout = 100 #seconds
+	_rtu_timeout = 15 #seconds
 
 # FUNCTIONS DEFINITION 
 
@@ -144,7 +144,7 @@ class RenkeYgcJyz12VW2(SitModbusDevice):
 
 		l_reg_list = OrderedDict()
 
-		SitUtils.od_extend(l_reg_list, RegisterTypeInt16u('GHI', 'Total irradiation on the external irradiation sensor/pyranometer (W/m2)', 0x01, a_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Int16u', an_is_metadata=False))
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt16u('GHI', 'Total irradiation on the external irradiation sensor/pyranometer (W/m2)', 0x00, a_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Int16u', an_is_metadata=False))
 		#SitUtils.od_extend(l_reg_list, RegisterTypeInt16u('GHIDev', 'Solar radiation deviation (0~1800)', 0x52, a_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Int16u', an_is_metadata=False))
 		#SitUtils.od_extend(l_reg_list, RegisterTypeInt32u('WDigIo', 'Active power setpoint Digital I/O', 31235, l_slave_address, SitModbusRegister.ACCESS_MODE_R, '%', an_is_metadata=False, a_post_set_value_call=self.sma_fix2))
 
@@ -230,7 +230,7 @@ class RenkeYgcJyz12VW2(SitModbusDevice):
 				self._logger.setLevel(logging.DEBUG)
 			else:
 				self._logger.setLevel(logging.INFO)
-			if self._args.store_values or self._args.display_all or self._args.test or self._args.raise_event:
+			if self._args.store_values or self._args.display_all or self._args.raise_event:
 				assert self.valid_slave_address(self._slave_address), 'Invalid slave address {}'.format(self._slave_address)
 				self.read_all_sit_modbus_registers()
 				if self._args.store_values:
@@ -240,8 +240,8 @@ class RenkeYgcJyz12VW2(SitModbusDevice):
 				if self._args.raise_event:
 					assert len(self._sit_modbus_registers) > 0, 'modbus_registers_not_empty'
 					self.call_sit_modbus_registers_events()
-				if self._args.test:
-					self.test()
+			if self._args.test:
+				self.test()
 #			if self._args.manual_restart:
 #				self.manual_restart()
 		except Exception as l_e:
@@ -281,6 +281,13 @@ class RenkeYgcJyz12VW2(SitModbusDevice):
 #			self._logger.info("-->inverter ************* l_d.inverter.points *************: %s" % (l_d.inverter.points))	#Gives the inverter available properties
 #			self._logger.info("-->inverter ************* common *************: %s" % (l_d.common))	
 #			self._logger.info("-->inverter ************* common Serial Number *************: %s" % (l_d.common.SN))	
+			#l_res = self.register_value(0x0, 1, 1)
+			l_reg_index = 0
+			l_slave = 1
+			l_val = 1
+			#l_write_res = self.write_register_value(l_reg_index, l_slave, l_val)
+			l_res = self.register_values_int_16_u(0x0, 1)
+			self._logger.info ("Register value:{}".format(l_res))
 			self._logger.info ("################# END #################")
 		except Exception as l_e:
 			self._logger.exception("Exception occured: %s" % (l_e))
