@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 #       DESCRIPTION: 
-#			script to get data from modbus rtu for a rs-ra-n01-jt irradiation sensor and store them into csv file
+#			script to get data from modbus rtu for a ygc-jyz-12V-W2 irradiation sensor and store them into csv file
 #				https://www.agromet.cl/ for data comparison
 #
 #			Shandong Renke Control Technology Co., Ltd.  
@@ -15,7 +15,7 @@
 #			Logging into /var/log/solarity/file_name.log
 #
 #       CALL SAMPLE:
-#			~/data/solarity/sit-raspi/sty-pub-raspi-modbus-drivers/nobrand/nobrand_black_irradiance_sensor_from_ali_rs-ra-n01-jt.py --host_ip '192.168.0.74' --host_mac '00:90:E8:73:0A:D6' --store_values --raise_event
+#			~/data/solarity/sit-raspi/sty-pub-raspi-modbus-drivers/renke/renke_ygc-jyz-12V-W2.py --host_ip '192.168.0.74' --host_mac '00:90:E8:73:0A:D6' --store_values --raise_event
 #				
 #	
 #	
@@ -105,7 +105,7 @@ class RenkeYgcJyz12VW2(SitModbusDevice):
 	_substract_one_to_register_index = False
 	_rtu_baudrate = 9600
 	_rtu_parity = 'N'
-	_rtu_timeout = 10 #seconds
+	_rtu_timeout = 100 #seconds
 
 # FUNCTIONS DEFINITION 
 
@@ -144,7 +144,7 @@ class RenkeYgcJyz12VW2(SitModbusDevice):
 
 		l_reg_list = OrderedDict()
 
-		SitUtils.od_extend(l_reg_list, RegisterTypeInt16u('GHI', 'Total irradiation on the external irradiation sensor/pyranometer (W/m2)', 0x0, a_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Int16u', an_is_metadata=False))
+		SitUtils.od_extend(l_reg_list, RegisterTypeInt16u('GHI', 'Total irradiation on the external irradiation sensor/pyranometer (W/m2)', 0x01, a_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Int16u', an_is_metadata=False))
 		#SitUtils.od_extend(l_reg_list, RegisterTypeInt16u('GHIDev', 'Solar radiation deviation (0~1800)', 0x52, a_slave_address, SitModbusRegister.ACCESS_MODE_R, 'Int16u', an_is_metadata=False))
 		#SitUtils.od_extend(l_reg_list, RegisterTypeInt32u('WDigIo', 'Active power setpoint Digital I/O', 31235, l_slave_address, SitModbusRegister.ACCESS_MODE_R, '%', an_is_metadata=False, a_post_set_value_call=self.sma_fix2))
 
