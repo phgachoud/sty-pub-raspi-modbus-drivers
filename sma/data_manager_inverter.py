@@ -8,7 +8,7 @@
 #			Logging into /var/log/solarity/file_name.log
 #
 #       CALL SAMPLE:
-#			/data/solarity/sit-raspi/modbus/data_manager_inverter.py --host_ip '192.168.0.74' --host_mac '00:90:E8:73:0A:D6' --store_values --raise_event --slave_address 3-7
+#			/data/solarity/sit-raspi/sty-pub-raspi-modbus-drivers/sma/data_manager_inverter.py --host_ip '192.168.0.74' --host_mac '00:90:E8:73:0A:D6' --store_values --raise_event --slave_address 3-7
 #	
 #	REQUIRE
 #		**** PYTHON *****

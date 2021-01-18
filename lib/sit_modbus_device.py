@@ -651,7 +651,7 @@ class SitModbusDevice (object):
 			self._args.host_mac.replace(':', '-') + '_' + 
 			self._target_ip + '_' + 
 			str(a_slave_address) + '_' + 
-			os.path.basename(__file__) + '.csv')
+			os.path.basename(__file__) + '_' + self.__class__.__name__ + '.csv')
 		if self._args.test:
 			l_result += 'test.csv'
 

@@ -82,6 +82,7 @@ class AdtekCpm20:
 
 	LOG_FILE_PATH = '/var/log/solarity'
 	DEFAULT_CSV_FILE_LOCATION = '/var/solarity' #without ending slash
+	PARSER_DESCRIPTION='Adtek pcm20 driver'
 
 # VARIABLES
 	__logger = None
@@ -560,6 +561,8 @@ class AdtekCpm20:
 		self.__logger.debug("register_values_u_long->after decoder:%s" % l_result)
 		return l_result
 
+		
+
 	def store_values_into_csv(self, a_row_dict):
 		"""
 		Stores values into CSV DEFAULT_CSV_FILE_LOCATION
@@ -573,6 +576,8 @@ class AdtekCpm20:
 				l_csv_writter = csv.writer(l_csv_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 				if not l_file_exists:
 					self.__logger.info("store_values_into_csv->Writting HEADER row: %s" % (';'.join(str(l) for l in a_row_dict.keys())))
+					l_csv_writter.writerow(['#Mn','Adtek']) #Manufacturer
+					l_csv_writter.writerow(['#Md','Cpm20']) #Model
 					l_csv_writter.writerow(a_row_dict.keys())
 				self.__logger.info("store_values_into_csv->HEADER row: %s" % (';'.join(str(l) for l in a_row_dict.keys())))
 				self.__logger.info("store_values_into_csv->Writting row: %s" % (';'.join(str(l) for l in a_row_dict.values())))
@@ -611,7 +616,7 @@ class AdtekCpm20:
 		"""
 		Parsing arguments
 		"""
-		self._parser = argparse.ArgumentParser(description=self.PARSER_DESCRIPTION)
+		self.__parser = argparse.ArgumentParser(description=self.PARSER_DESCRIPTION)
 		self.__parser.add_argument('-v', '--verbose', help='increase output verbosity', action="store_true")
 		self.__parser.add_argument('-s', '--store_values', help='Store values into csv file', action="store_true")
 		self.__parser.add_argument('-d', '--display_only', help='Only display read value, doesnt do the associated action (as logger INFO level)', action="store_true")
