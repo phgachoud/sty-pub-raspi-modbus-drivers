@@ -603,9 +603,10 @@ class SitModbusDevice (object):
 			self._logger.info("store_values_into_csv->Writting into file %s exists:%s" % (l_f_name, l_file_exists))
 			with open(l_f_name, mode='a+') as l_csv_file:
 				l_csv_writter = csv.writer(l_csv_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-				for l_header_row in self._header_rows():
-					self._logger.info("store_values_into_csv->writting header:{}".format(l_header_row))
-					l_csv_writter.writerow(l_header_row)
+				if not l_file_exists:
+					for l_header_row in self._header_rows():
+						self._logger.info("store_values_into_csv->writting header:{}".format(l_header_row))
+						l_csv_writter.writerow(l_header_row)
 				# Metadata and registers
 				l_header_list = []
 				l_values_dict = []
