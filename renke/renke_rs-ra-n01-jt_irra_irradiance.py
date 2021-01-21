@@ -89,7 +89,7 @@ except ImportError as l_err:
 	print(sys.path)
 	raise l_err
 
-class NobrandBlackRsRaN01Jt(SitModbusDevice):
+class RenkeRsRaN01Jt(SitModbusDevice):
 
 # CONSTANTS
 
@@ -118,10 +118,13 @@ class NobrandBlackRsRaN01Jt(SitModbusDevice):
 			self.init_arg_parse()
 			assert self.valid_slave_address(a_slave_address), 'a_slave_address parameter invalid:{}'.format(l_slave_address)
 			l_slave_address = a_slave_address
+			l_usb_port = self.DEFAULT_MODBUS_PORT
 			if __name__ == '__main__':
 				if (hasattr(self._args, 'slave_address') and self._args.slave_address):
 					l_slave_address = self._args.slave_address
-			super().__init__(l_slave_address, self.DEFAULT_TARGET_MODE, a_port=self.DEFAULT_MODBUS_PORT, an_ip_address=self._args.host_ip) 
+				if (hasattr(self._args, 'usb_port') and self._args.usb_port):
+					l_usb_port = self._args.usb_port
+			super().__init__(l_slave_address, self.DEFAULT_TARGET_MODE, a_port=l_usb_port, an_ip_address=self._args.host_ip) 
 			self._logger = SitLogger().new_logger(self.__class__.__name__, self._args.host_mac)
 			self._init_sit_modbus_registers(l_slave_address)
 
@@ -264,6 +267,7 @@ class NobrandBlackRsRaN01Jt(SitModbusDevice):
 		self._parser.add_argument('-e', '--raise_event', help='Raises the corresponding event if setted', action="store_true")
 		#self._parser.add_argument('-r', '--manual_restart', help='Sends a manual restart to inverter manager', action="store_true")
 		self._parser.add_argument('-c', '--slave_address', help='Slave address of modbus device', nargs='?')
+		self._parser.add_argument('-p', '--usb_port', help='USB port', nargs='?')
 
 	def add_required_named(self, a_required_named):
 		pass
@@ -307,7 +311,7 @@ def main():
 	logger = logging.getLogger(__name__)
 
 	try:
-		l_obj = NobrandBlackRsRaN01Jt()
+		l_obj = RenkeRsRaN01Jt()
 		l_obj.execute_corresponding_args()
 #		l_id.test()
 		pass
