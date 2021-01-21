@@ -206,6 +206,10 @@ class SitModbusDevice (object):
 
 # HIGH LEVEL FUNCTIONS
 
+	def _header_rows (self):
+		#return [['#Mn', 'some_manufacturer'], ['#Md', 'some_model']]
+		return []
+
 	def add_modbus_register_from_values(self, a_short_description, a_description, a_register_index, a_register_type, a_slave_address, an_access_mode=SitModbusRegister.ACCESS_MODE_R, a_value_unit=None, a_scale_factor_register_index=None, an_event=None, an_is_metadata=False):
 		""" 
 		adds to self._sit_modbus_registers
@@ -599,6 +603,9 @@ class SitModbusDevice (object):
 			self._logger.info("store_values_into_csv->Writting into file %s exists:%s" % (l_f_name, l_file_exists))
 			with open(l_f_name, mode='a+') as l_csv_file:
 				l_csv_writter = csv.writer(l_csv_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+				for l_header_row in self._header_rows():
+					self._logger.info("store_values_into_csv->writting header:{}".format(l_header_row))
+					l_csv_writter.writerow(l_header_row)
 				# Metadata and registers
 				l_header_list = []
 				l_values_dict = []

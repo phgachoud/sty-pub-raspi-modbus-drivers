@@ -159,6 +159,10 @@ class RenkeRsRaN01Jt(SitModbusDevice):
 		self.invariants()
 
 
+	def _header_rows (self):
+		return [['#Mn', 'renke'], ['#Md', 'rs-ra-n01-jt']]
+
+
 	def sma_fix2(self, a_sit_modbus_register):
 		"""
 		"""

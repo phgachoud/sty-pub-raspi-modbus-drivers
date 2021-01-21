@@ -158,6 +158,8 @@ class RenkeYgcJyz12VW2(SitModbusDevice):
 
 		self.invariants()
 
+	def _header_rows (self):
+		return [['#Mn', 'renke'], ['#Md', 'ygc-jyz-12V-W2']]
 
 	def sma_fix2(self, a_sit_modbus_register):
 		"""
