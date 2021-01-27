@@ -214,7 +214,7 @@ class SchneiderPm5500:
                             
 
                     #Starting add, num of reg to read, slave unit.
-                    self.__logger.debug("register_value_invalid_int->about to read register index:%s length:%s channel:%s" % (a_register_index, a_register_length, self.__args.channel))
+                    self.__logger.debug("register_value_invalid_int->about to read register index:%s length:%s slave:%s" % (a_register_index, a_register_length, self.__args.channel))
                     l_result = self.__modbus_client.read_holding_registers(a_register_index, a_register_length, unit=int(self.__args.channel)) # Average current
                     if l_result is not None:
                             self.__logger.debug(l_result.__str__())
