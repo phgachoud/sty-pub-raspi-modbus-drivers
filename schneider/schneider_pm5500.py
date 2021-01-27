@@ -51,8 +51,8 @@ try:
 	import pymodbus
 	import serial
 	from pymodbus.pdu import ModbusRequest
-	#from pymodbus.client.sync import ModbusSerialClient as ModbusClient #initialize a serial RTU client instance https://github.com/riptideio/pymodbus/blob/master/pymodbus/client/sync.py
-	from pymodbus.client.sync import ModbusTcpClient as ModbusClient # FOR TCP
+	from pymodbus.client.sync import ModbusSerialClient as ModbusSerialClient #initialize a serial RTU client instance https://github.com/riptideio/pymodbus/blob/master/pymodbus/client/sync.py
+	from pymodbus.client.sync import ModbusTcpClient as ModbusTcpClient # FOR TCP
 	from pymodbus.transaction import ModbusRtuFramer
 	import time
 	import requests
@@ -140,23 +140,24 @@ class SchneiderPm5500:
 		"""
 		assert not self.is_connected()
 		try:
-			#self.__register_value
-			#count= the number of registers to read
-			#unit= the slave unit this request is targeting
-			#address= the starting address to read from
-
-			#self.__modbus_client = ModbusClient(method="rtu", port="/dev/ttyUSB0", timeout=1, stopbits=1, bytesize=8, parity='E', baudrate=19200)
-			self.__logger.debug("IP:%s" % self.__args)
-			self.__modbus_client = ModbusClient(self.__args.host_ip, retries=3, retry_on_empty=True)
-			#self.__modbus_client = ModbusClient('172.16.10.139', port=502, retry_on_empty=True)
-
-			#Connect to the serial modbus server
-			connection = self.__modbus_client.connect()
-			if self.__modbus_client.connect:
-				#self.__logger.debug("Client is connected")
-				self.__is_connected = True
-			else:
-				raise Exception("Could not connect to __modbus_client")
+                    #self.__register_value
+                    #count= the number of registers to read
+                    #unit= the slave unit this request is targeting
+                    #address= the starting address to read from
+                    if self.__args.usb_port:
+                        l_serial_port=self.__args.usb_port
+                        self.__logger.debug("Serial client with USB port:{}".format(l_serial_port))
+                        self.__modbus_client = ModbusSerialClient(method="rtu", port=l_serial_port, timeout=1, stopbits=1, bytesize=8, parity='E', baudrate=19200)
+                    else:
+                        self.__logger.debug("TCP client with IP:{}".format(self.__args.host_ip))
+                        self.__modbus_client = ModbusTcpClient(self.__args.host_ip, retries=3, retry_on_empty=True)
+                    #Connect to the serial modbus server
+                    connection = self.__modbus_client.connect()
+                    if self.__modbus_client.connect:
+                        #self.__logger.debug("Client is connected")
+                        self.__is_connected = True
+                    else:
+                        raise Exception("Could not connect to __modbus_client")
 		except Exception as l_e:
 			self.__logger.exception("connect:Exception occured during connection" + l_e.message)
 			raise l_e
@@ -169,21 +170,21 @@ class SchneiderPm5500:
 		assert self.__args.channel, "channel is empty"
 		assert self.is_connected(), "register_value->device is not connected"
 		try:
-
-			#Starting add, num of reg to read, slave unit.
-			l_result = self.__modbus_client.read_holding_registers(a_register_index, a_register_length, unit=int(self.__args.channel)) # Average current
-			if l_result is not None:
-				self.__logger.debug(l_result.__str__())
-				if l_result.function_code < 0xFFFFFFFF:
-					self.__logger.debug("register_value->registers:%s" % l_result.registers)
-					#self.__logger.debug(l_result)
-					#self.__logger.debug("register_value->register 0 value:%s" % l_result.getRegister(1))
-					self.__logger.debug("register 0 type:%s" % type(l_result.getRegister(0)))
-					#self.__logger.debug(l_result.__str__())
-				else:
-					self.__logger.error("register_value-> returned code is invalid: %s" % l_result.function_code)
-			else:
-				self.__logger.error("register_value-> No register received, l_result is None")
+                    #Starting add, num of reg to read, slave unit.
+                    self.__logger.debug('register_value->slave address->{}'.format(self.__args.channel))
+                    l_result = self.__modbus_client.read_holding_registers(a_register_index, a_register_length, unit=int(self.__args.channel)) # Average current
+                    if l_result is not None:
+                            self.__logger.debug(l_result.__str__())
+                            if l_result.function_code < 0xFFFFFFFF:
+                                    self.__logger.debug("register_value->registers:%s" % l_result.registers)
+                                    #self.__logger.debug(l_result)
+                                    #self.__logger.debug("register_value->register 0 value:%s" % l_result.getRegister(1))
+                                    self.__logger.debug("register 0 type:%s" % type(l_result.getRegister(0)))
+                                    #self.__logger.debug(l_result.__str__())
+                            else:
+                                    self.__logger.error("register_value-> returned code is invalid: %s" % l_result.function_code)
+                    else:
+                            self.__logger.error("register_value-> No register received, l_result is None")
 
 		except KeyboardInterrupt:
 			self.__logger.exception("Keyboard interruption")
@@ -194,46 +195,47 @@ class SchneiderPm5500:
 			return l_result
 
 	def register_value_invalid_int(self, a_register_index, a_register_length):
-		"""
-		Returns a given register value
-		@a_register_length: 1 register is 16 bits (2 bytes = 1 word)
-		"""
-		assert self.__args.channel, "channel is empty"
-		assert self.is_connected(), "register_value->device is not connected"
-		try:
+            """
+            Returns a given register value
+            @a_register_length: 1 register is 16 bits (2 bytes = 1 word)
+            """
+            assert self.__args.channel, "channel is empty"
+            assert self.is_connected(), "register_value->device is not connected"
+            l_result = None
+            try:
 
-			#https://groups.google.com/forum/#!topic/pymodbus/X4vtEg9Hq10
-			#https://stackoverflow.com/questions/32421197/struct-error-required-argument-is-not-an-integer
-			# FLOAT32	Floating Point, 32 bits	+/- 1*10^38	0xFFC00000
-			#	PYTHON DOC: https://docs.python.org/2/library/struct.html#format-characters
-			#
-			#self.__modbus_client.read_holding_registers(a_register_index => /home/pg/data/solarity/sit-raspi/current_monitoring/rs485_to_usb/schneider_pm5500.py
-			
-				
+                    #https://groups.google.com/forum/#!topic/pymodbus/X4vtEg9Hq10
+                    #https://stackoverflow.com/questions/32421197/struct-error-required-argument-is-not-an-integer
+                    # FLOAT32	Floating Point, 32 bits	+/- 1*10^38	0xFFC00000
+                    #	PYTHON DOC: https://docs.python.org/2/library/struct.html#format-characters
+                    #
+                    #self.__modbus_client.read_holding_registers(a_register_index => /home/pg/data/solarity/sit-raspi/current_monitoring/rs485_to_usb/schneider_pm5500.py
+                    
+                            
 
-			#Starting add, num of reg to read, slave unit.
-			self.__logger.debug("register_value_invalid_int->about to read register index:%s length:%s channel:%s" % (a_register_index, a_register_length, self.__args.channel))
-			l_result = self.__modbus_client.read_holding_registers(a_register_index, a_register_length, unit=int(self.__args.channel)) # Average current
-			if l_result is not None:
-				self.__logger.debug(l_result.__str__())
-				if l_result.function_code < 0xFFFFFFFF:
-					self.__logger.debug("register_value->registers:%s" % l_result.registers)
-					#self.__logger.debug(l_result)
-					#self.__logger.debug("register_value->register 0 value:%s" % l_result.getRegister(1))
-					self.__logger.debug("register 0 type:%s" % type(l_result.getRegister(0)))
-					#self.__logger.debug(l_result.__str__())
-				else:
-					self.__logger.error("register_value-> returned code is invalid: %s" % l_result.function_code)
-			else:
-				self.__logger.error("register_value-> No register received, l_result is None")
+                    #Starting add, num of reg to read, slave unit.
+                    self.__logger.debug("register_value_invalid_int->about to read register index:%s length:%s channel:%s" % (a_register_index, a_register_length, self.__args.channel))
+                    l_result = self.__modbus_client.read_holding_registers(a_register_index, a_register_length, unit=int(self.__args.channel)) # Average current
+                    if l_result is not None:
+                            self.__logger.debug(l_result.__str__())
+                            if l_result.function_code < 0xFFFFFFFF:
+                                    self.__logger.debug("register_value->registers:%s" % l_result.registers)
+                                    #self.__logger.debug(l_result)
+                                    #self.__logger.debug("register_value->register 0 value:%s" % l_result.getRegister(1))
+                                    self.__logger.debug("register 0 type:%s" % type(l_result.getRegister(0)))
+                                    #self.__logger.debug(l_result.__str__())
+                            else:
+                                    self.__logger.error("register_value-> returned code is invalid: %s" % l_result.function_code)
+                    else:
+                            self.__logger.error("register_value-> No register received, l_result is None")
 
-		except KeyboardInterrupt:
-			self.__logger.exception("Keyboard interruption")
-		except Exception as l_e:
-			self.__logger.exception("register:Exception occured, msg:" + l_e.message)
-		finally:
+            except KeyboardInterrupt:
+                    self.__logger.exception("Keyboard interruption")
+            except Exception as l_e:
+                    self.__logger.exception("register:Exception occured, msg:" + l_e.message)
+            finally:
 #			self.__logger.info("register:".join(str(e) for e in result))
-			return l_result
+                    return l_result
 
 	def get_csv_file_path(self):
 		"""
@@ -772,10 +774,10 @@ class SchneiderPm5500:
 	def init_arg_parse(self):
 		self.__parser = argparse.ArgumentParser(description=self.PARSER_DESCRIPTION)
 		self.__parser.add_argument('-v', '--verbose', help='increase output verbosity', action="store_true")
+		self.__parser.add_argument('-u', '--usb_port', help='Store values into csv file', nargs="?")
 		self.__parser.add_argument('-s', '--store_values', help='Store values into csv file', action="store_true")
 		self.__parser.add_argument('-d', '--display_only', help='Only display read value, doesnt do the associated action (as logger INFO level)', action="store_true")
 		self.__parser.add_argument('-t', '--test', help='Calls test method', action="store_true")
-		self.__parser.add_argument('-u', '--base_url', help='Gives the base URL for requests actions', nargs='?', default=self.DEFAULT_BASE_URL)
 		l_required_named = self.__parser.add_argument_group('required named arguments')
 		l_required_named.add_argument('-c', '--channel', help='Channel index', nargs='?', required=True)
 		l_required_named.add_argument('-i', '--host_ip', help='Host IP', nargs='?', required=True)
@@ -796,9 +798,6 @@ class SchneiderPm5500:
 			self.__console_handler.setLevel(logging.ERROR)
 			self.__file_handler.setLevel(logging.DEBUG)
 			
-		if self.__args.base_url:
-			self.__logger.debug("execute_corresponding_args->given argument was '%s'" % self.__args.base_url)
-			self.__base_url = self.__args.base_url
 		if self.__args.store_values:
 			self.store_values_into_csv(self.get_csv_row())
 		if self.__args.test:
